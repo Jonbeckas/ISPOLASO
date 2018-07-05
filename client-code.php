@@ -1,9 +1,9 @@
 <?php
 //	require("client.php");
 	include "settings.php";
-	if ($_POST["nummer"]==0){
+	/*if ($_POST["nummer"]==0){
 		header("Location: ".url."/client.php");
-	}
+	}*/
 ?>
 <head>
 	<title><?php echo name ?></title>
@@ -17,7 +17,7 @@
 					</script>");
 		}
 		date_default_timezone_set("Europe/Berlin");
-		$student = $_POST["nummer"];
+		$student = $_POST["content"];
 		$result = $mysqli->query("SELECT Uhrzeit FROM ".table." WHERE Nummer='".$student."'");
 		$result = $result->fetch_assoc();
 		$result = $result["Uhrzeit"];
@@ -28,7 +28,7 @@
 		$rounds = intval($rounds);
 		$rounds = $rounds+1;
 		$timestamp = time();
-		if ($result == 0 && $rounds==1){ 
+		if ($result == 0 && $rounds==1){
 		exit("<script type=\"text/javascript\">
 					alert(\"Du wurdest nicht in der Datenbank gefunden. Bitte melde dich beim SV-Stand\")
 					window.setTimeout('location.href=\"".url."/client.php\"', 0);

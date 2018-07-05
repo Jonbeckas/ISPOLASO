@@ -10,7 +10,7 @@
         <?php echo name ?>
     </h1>
 	<form action="client-code.php" method="POST">
-		<input class="fill" type="text" name="nummer"><br>
+		<input class="fill" type="text" name="content"><br>
 		<input class="button" type="submit" value="Ok">
 	</form>
 </body>

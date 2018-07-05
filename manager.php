@@ -6,7 +6,8 @@
 </head>
 <body>
 	<?php
-		if (!isset($_POST["username"])or !isset($_POST["userpassword"]) or $_POST["username"]== null or $_POST["userpassword"] == null)
+	//Login
+		if (!isset($_POST["username"])or !isset($_POST["userpassword"]) or $_POST["username"]== null or $_POST["userpassword"] == null && !isset($_SESSION["username"]))
 		{
 			echo "<form action=\"manager.php\" method=\"POST\">
 						<p>Name:</p>
@@ -16,7 +17,7 @@
 						<input value=\"Anmelden\" type=\"submit\">
 				 </form>";
 		}
-		else
+		elseif (isset($_POST["username"])or isset($_POST["userpassword"]) && !isset($_SESSION["username"]))
 		{
 			$username = $_POST["username"];
 			$userpassword = $_POST["userpassword"];
@@ -32,9 +33,9 @@
 				$dbpasswd = $dbpasswd["Vorname"];
 		   		if(password_verify($userpassword,$dbpasswd))
 				{
-					echo "<form action=\"register.php\" method=\"POST\">
-								<input value=\"Neuen Nutzer anlegen\" type=\"submit\">
-						 </form>";
+					session_start();
+					$_SESSION["username"]=$POST["username"];
+					show_menu();
 				}
 
 
