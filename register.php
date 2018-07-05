@@ -1,11 +1,14 @@
 <?php
-//	include "settings.php";
 	include "functions.php";
+
 ?>
 <head>
 	<title><?php echo name; ?></title>
 </head>
 <body>
+	<?php
+
+  ?>
     <form action="register.php" method="POST">
         <p>Name:</p>
         <input name="newusername" type="text">
