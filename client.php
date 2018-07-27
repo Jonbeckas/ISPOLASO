@@ -66,10 +66,19 @@
 		if ($timestamp>=$result+mintime){
 			$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
 			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
-			echo "<p>Dies war Runde</p><br><p>".$rounds."</p>
-					<script type=\"text/javascript\">
-						window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
-					</script>";
+				echo "	<head>
+				    			<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+									<title>".name."</title>
+								</head>
+								<body>
+									<h1>
+											".name."
+									</h1>
+									<p>Dies war Runde: </p><p>".$rounds."</p>
+									<script type=\"text/javascript\">
+										window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
+									</script>
+								</body>";
 		}
 		else{
 			echo "<p>Du warst auffällig schnell, bitte melde dich am SV Stand.<p>
