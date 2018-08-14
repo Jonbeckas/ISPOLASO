@@ -14,6 +14,7 @@
 		echo
 		"<head>
 		    <link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+				<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
 			<title>".name."</title>
 		</head>
 		<body>
@@ -68,6 +69,7 @@
 			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
 				echo "	<head>
 				    			<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
 									<title>".name."</title>
 								</head>
 								<body>

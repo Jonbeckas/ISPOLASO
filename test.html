@@ -1,0 +1,14 @@
+<script>
+  var txt;
+  var nummer = prompt("Schülernummer:", "");
+	var Name = prompt("Name:", "");
+	var Nachname = prompt("Nachname:", "");
+	var Klasse = prompt("Klasse:", "");
+    if (nummer == null || nummer == ""||Name == null || Name == ""||Nachname == null || Nachname == ""||Klasse == null || Klasse == "") {
+      alert("Abgebrochen");
+		   window.setTimeout('location.href="".url."/manager.php?part=interface"', 0);
+    } else {
+        txt = "Hello " + nummer+Name+Nachname+Klasse +"! How are you today?";
+    }
+    document.getElementById("demo").innerHTML = txt;
+</script>
