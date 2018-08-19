@@ -77,16 +77,6 @@
 										</form>
 										<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
 										<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
-
-										<script>
-										function refreshIFrame() {
-					            var x = document.getElementById(\"Vermisst\");
-											var y = document.getElementById(\"Allgemein\");
-					            x.contentWindow.location.reload();
-											y.contentWindow.location.reload();
-					            var t = setTimeout(refreshIFrame, 60000);
-					        	}
-										</script>
 										";
 				}
 				/*elseif ($Anwesend==1)
@@ -262,7 +252,7 @@
 			{
 				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
 				{
-					if ($_POST("Oder")=="SuS")
+					if ($_POST["Oder"]=="SuS")
 					{
 						$mysqli = new mysqli(host,user, password, database);
 						if($mysqli->connect_errno)
@@ -271,7 +261,7 @@
 									alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 								</script>");
 						}
-							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Klasse='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
 							echo "Erfolgreich";
 							echo "<script type=\"text/javascript\">
 										window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 10);
@@ -288,7 +278,7 @@
 						}
 						for ($i=0;$i <=maxschueler; $i++)
 						{
-							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Klasse='".time()."' WHERE Nummer='".$i."' AND Klasse='".$_POST["personnummer"]."'");
+							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$i."' AND Klasse='".$_POST["personnummer"]."'");
 						}
 						echo "Erfolgreich";
 						echo "<script type=\"text/javascript\">
