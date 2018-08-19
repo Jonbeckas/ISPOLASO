@@ -63,6 +63,9 @@
 											<form action=\"manager.php?part=about\" method=\"POST\">
 												<input value=\"Über\" type=\"submit\">
 											</form>
+											<form action=\"manager.php?part=export\" method=\"POST\">
+												<input value=\"Daten Exportieren\" type=\"submit\">
+											</form>
 											<form action=\"manager.php?part=logout\" method=\"POST\">
 												<input value=\"Ausloggen\" type=\"submit\">
 											</form>
