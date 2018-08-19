@@ -198,17 +198,24 @@
 		//Über
 		elseif ($_GET["part"]=="about"&&isset($_GET["part"]))
 		{
-			echo "<p>Programmiert von: Jonas Becker<br>Design: Florian Weichert<br>ISPOLASO<br><a href=\"".url.".manager.php?part=interface\">Zurück zum Dashboard</a></p>";
+			echo "<p>Programmiert von: Jonas Becker<br>
+			Design: Florian Weichert<br>
+			Konzept&Idee Jonas Becker & Marten Schiwek<br>
+			ISPOLASO<br>
+			<a href=\"https://github.com/Jonbeckas/ISPOLASO\">GitHub Seite </a>
+			<a href=\"".url.".manager.php?part=interface\">Zurück zum Dashboard</a></p>";
 		}
 		//Parts
 		elseif ($_GET["part"]=="parts"&&isset($_GET["part"]))
 		{
+			//Weiterleitung zur Registrierung
 			if (isset($_POST["sregister"])==true)
 			{
 				echo "<script type=\"text/javascript\">
 							window.setTimeout('location.href=\"".url."/manager.php?part=anmelden\"', 0);
 						</script>";
 			}
+			//Abmeldung
 			elseif (isset($_POST["abmelden"]))
 			{
 				date_default_timezone_set("Europe/Berlin");
@@ -224,7 +231,17 @@
 								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 							</script>");
 					}
-					$mysqli->query("UPDATE ".table." SET Anwesenheit='2' , Vorname='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+					if ($_POST["Oder"]=="Sus")
+					{
+						$mysqli->query("UPDATE ".table." SET Anwesenheit='2' , Vorname='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+					}
+					elseif ($_POST["Oder"]=="K")
+					{
+						for ($i=0;$i <=maxschueler; $i++)
+						{
+							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$i."' AND Klasse='".$_POST["personnummer"]."'");
+						}
+					}
 					$managerLog = fopen("Manager.log", "a");
 					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer: ".$_POST["personnummer"]." abgemeldet\n");
 					fclose($managerLog);
@@ -241,6 +258,7 @@
 							</script>";
 				}
 			}
+			//plus eine Runde
 			elseif (isset($_POST["p1"]))
 			{
 				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
@@ -276,6 +294,7 @@
 							</script>";
 				}
 			}
+			//minus eine Runde
 			elseif (isset($_POST["m1"]))
 			{
 				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
@@ -311,6 +330,7 @@
 							</script>";
 				}
 			}
+			//anmelden
 			elseif (isset($_POST["anmelden"]))
 			{
 				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
@@ -361,6 +381,7 @@
 									</script>";
 					}
 				}
+				//Für FEHLER
 				else
 				{
 					echo "<script type=\"text/javascript\">
@@ -369,6 +390,7 @@
 							</script>";
 				}
 			}
+			//Für fehler
 			else {
 
 					echo "<script type=\"text/javascript\">
@@ -377,7 +399,7 @@
 
 			}
 		}
-		//Anmelden
+		//SuS Registrieren
 		elseif ($_GET["part"]=="anmelden"&&isset($_GET["part"]))
 		{
 			if (isset($_GET["process"])==false)
@@ -419,6 +441,7 @@
 							</script>";
 			}
 		}
+		//Exportieren
 		elseif ($_GET["part"]=="export"&&isset($_GET["part"]))
 		{
 			$mysqli = new mysqli(host,user, password, database);

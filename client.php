@@ -101,7 +101,7 @@
 								<h1>
 										".name."
 								</h1>
-								<p>Dies war Runde: </p><p>".$rounds."</p>
+								<p>Dies war Runde: ".$rounds."</p>
 								<script type=\"text/javascript\">
 									window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
 								</script>
