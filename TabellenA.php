@@ -36,9 +36,11 @@
         <td>Anwesenheit</td>
         <td>Uhrzeit der letzten Runde</td>
         <td>Ankunftszeit</td>
+        <td>Abmeldezeit</td>
+        <td>Runde</td>
 
       </tr>";
-      for($i = 0; $i <=maxschueler; $i++)
+      for($i = 1; $i <=maxschueler; $i++)
       {
         if (isset($_POST["GroßKlein"])==true)
         {
@@ -70,11 +72,13 @@
               <td>".$sqlSelect["Anwesenheit"]."</td>
               <td>".strftime("%H:%M", $sqlSelect["Uhrzeit"])."</td>
               <td>".$sqlSelect["Ankunftszeit"]."</td>
+              <td>".$sqlSelect["Vorname"]."</td>
+              <td>".$sqlSelect["Runde"]."</td>
             </tr>";
         }
       }
       echo "</table>";
       echo "<script>
-              window.setTimeout('location.href=\"".url."/TabellenA.php\"', 3000);
+              window.setTimeout('location.href=\"".url."/TabellenA.php\"', 30000);
             </script>";
  ?>
