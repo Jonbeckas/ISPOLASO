@@ -34,7 +34,11 @@
 			<title>".name."</title>
 		</head>";
 		$mysqli = new mysqli(host,user, password, database);
-		if($mysqli->connect_errno) {
+		if($mysqli->connect_errno)
+		{
+			$clientLog = fopen("client.log", "w");
+			fwrite($clientLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+			fclose($clientLog);
 			header("Custom-Title: FEHLER 403");
 			header("Custom-Message: Es liegt ein Fehler mit der Datenbank vor. Keine Verbindung möglich;");
     		exit("<script type=\"text/javascript\">
@@ -45,6 +49,9 @@
 		$student = $_POST["data"];
 		if (is_numeric($student)==false)
 		{
+			$clientLog = fopen("client.log", "w");
+			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$student." war keine richtige Zahl\n");
+			fclose($clientLog);
 			header("Custom-Title: FEHLER 418");
 			header("Custom-Message: Keine Gültige Zahl!");
 			exit("<script type=\"text/javascript\">
@@ -65,7 +72,11 @@
 		$Anwesenheit = $Anwesenheit["Anwesenheit"];
 		$Anwesenheit = intval($Anwesenheit);
 		$timestamp = time();
-		if ($result == 0 && $rounds==1||$Anwesenheit==0){
+		if ($result == 0 && $rounds==1||$Anwesenheit==0
+		{
+			$clientLog = fopen("client.log", "w");
+			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." war nicht Angemeldet oder nicht gefunden\n");
+			fclose($clientLog);
 			header("Custom-Title: FEHLER 404");
 			header("Custom-Message: Der Schueler wurde nicht Gefunden oder ist nicht Angemeldet!");
 			exit("<script type=\"text/javascript\">
@@ -76,26 +87,32 @@
 		if ($timestamp>=$result+mintime){
 			$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
 			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
+			$clientLog = fopen("client.log", "w");
+			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat Runde ".$rounds." gelaufen\n");
+			fclose($clientLog);
 			header("Custom-Title: Scan gesendet");
 			header("Custom-Message: Dies war Runde: ".$rounds);
-				echo "	<head>
-				    			<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
-									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
-									<title>".name."</title>
-								</head>
-								<body>
-									<h1>
-											".name."
-									</h1>
-									<p>Dies war Runde: </p><p>".$rounds."</p>
-									<script type=\"text/javascript\">
-										window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
-									</script>
-								</body>";
+			echo "	<head>
+				    		<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+								<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
+								<title>".name."</title>
+							</head>
+							<body>
+								<h1>
+										".name."
+								</h1>
+								<p>Dies war Runde: </p><p>".$rounds."</p>
+								<script type=\"text/javascript\">
+									window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
+								</script>
+							</body>";
 		}
 		else{
 			header("Custom-Title: FEHLER 508");
-			header("Custom-Message: Der Schueler ist zu schnell gelaufen! Manuelle Eingabe?");
+			header("Custom-Message: Der Schueler ist ".time()-$result." Sek. zu schnell gelaufen! Manuelle Eingabe?");
+			$clientLog = fopen("client.log", "w");
+			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." war ".time()-$result." Sek. zu schnell\n");
+			fclose($clientLog);
 			echo "<p>Du warst auffällig schnell, bitte melde dich am SV Stand.<p>
 				<script type=\"text/javascript\">
 					window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
