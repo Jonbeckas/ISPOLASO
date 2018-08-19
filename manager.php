@@ -410,6 +410,7 @@
 					}
 				}
 				fclose($csv);
+				unlink("./Export.zip");
 				$zipname= "./Export.zip";
 				$zip = new ZipArchive();
 				if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
@@ -421,7 +422,7 @@
 				}
 				$InfoTXT = fopen("Info.txt", "a");
 				fwrite($InfoTXT, "Erstellt am: ");
-				fwrite($InfoTXT, strftime("%d.%m.%Y_%H:%M",time())."\nExport.csv enthält die Datenbank und ist UTF8 kodiert\nManager.log & Client.log enthalten die Logs vom manager Interface und vom der Eingabe GUI");
+				fwrite($InfoTXT, strftime("%d.%m.%Y_%H:%M",time())."\nExport.csv enthält die Datenbank und ist UTF8 kodiert\nManager.log & Client.log enthalten die Logs vom manager Interface und vom der Eingabe GUI\nFalls Logs falsch dargestellt werden einfach in .txt umbenennen");
 				fclose($InfoTXT);
 					$zip->addFile("Export.csv");
 					$zip->addFile("Client.log");
