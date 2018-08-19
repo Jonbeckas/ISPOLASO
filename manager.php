@@ -36,6 +36,9 @@
 				$mysqli = new mysqli(host,user, password, database);
 				if($mysqli->connect_errno)
 				{
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+					fclose($managerLog);
 					exit("<script type=\"text/javascript\">
 							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 						</script>");
@@ -43,49 +46,49 @@
 				$Anwesend=$mysqli->query("SELECT Klasse FROM ".table." WHERE Name='MAN_".$username."'");
 				$Anwesend = $Anwesend->fetch_assoc();
 				$Anwesend = $Anwesend["Klasse"];
-			//	if($Anwesend==0)
-	//			{
 					$mysqli->query("UPDATE ".table." SET Klasse=1 WHERE Name='MAN_".$username."'");
 					$dbpasswd = $mysqli->query("SELECT Vorname FROM ".table." WHERE Name='MAN_".$username."'");
 					$dbpasswd = $dbpasswd->fetch_assoc();
 					$dbpasswd = $dbpasswd["Vorname"];
 						if(password_verify($userpassword,$dbpasswd))
-					{
-						$USER = $username;
-						//interface
-						echo  "<form action=\"manager.php?part=register\" method=\"POST\">
-											<input value=\"Admin Registrieren\" type=\"submit\">
-										</form>
-										<form action=\"manager.php?part=about\" method=\"POST\">
-											<input value=\"Über\" type=\"submit\">
-										</form>
-										<form action=\"manager.php?part=logout\" method=\"POST\">
-											<input value=\"Ausloggen\" type=\"submit\">
-										</form>
-										<form action=\"manager.php?part=parts\" method=\"POST\">
-											<input value=\"SchülerInnen Registrieren\" name=\"sregister\" type=\"submit\">
-										</form>
-										<form action=\"manager.php?part=parts\" method=\"POST\">
-											<input name=\"personnummer\" type=\"text\">
-											<select id=\"Oder\" name=\"Oder\">
-												<option value=\"K\">Klasse</option>
-												<option value=\"SuS\">SchülerInnen</option>
-											</select>
-											<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
-											<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
-											<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
-										</form>
-										<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
-										<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
-										";
+						{
+							$managerLog = fopen("Manager.log", "a");
+							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich erfolgreich angemeldet\n");
+							fclose($managerLog);
+							$USER = $username;
+							//interface
+							echo  "<form action=\"manager.php?part=register\" method=\"POST\">
+												<input value=\"Admin Registrieren\" type=\"submit\">
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\">
+												<input value=\"Über\" type=\"submit\">
+											</form>
+											<form action=\"manager.php?part=logout\" method=\"POST\">
+												<input value=\"Ausloggen\" type=\"submit\">
+											</form>
+											<form action=\"manager.php?part=parts\" method=\"POST\">
+												<input value=\"SchülerInnen Registrieren\" name=\"sregister\" type=\"submit\">
+											</form>
+											<form action=\"manager.php?part=parts\" method=\"POST\">
+												<input name=\"personnummer\" type=\"text\">
+												<select id=\"Oder\" name=\"Oder\">
+													<option value=\"K\">Klasse</option>
+													<option value=\"SuS\">SchülerInnen</option>
+												</select>
+												<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
+												<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
+												<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
+											</form>
+											<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
+											<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
+											";
 				}
-				/*elseif ($Anwesend==1)
-				{
-					echo "Bitte melde dich erst an einem Anderem PC mit deinem Account ab!";
-				}*/
 				else
 				{
-					echo "Es liegt ein Fehler mit deinem Account vor";
+					echo "Es liegt ein Fehler mit deinem Account vor. Ist das Passwort falsch?";
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$username."konnte nicht angemeldet werden\n");
+					fclose($managerLog);
 				}
 
 					}
@@ -143,12 +146,18 @@
 					$mysqli = new mysqli(host,user, password, database);
 					if($mysqli->connect_errno)
 					{
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($managerLog);
 						exit("<script type=\"text/javascript\">
 								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 								</script>");
 					}
 						$hash =password_hash($_POST["password"],PASSWORD_DEFAULT);
 						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Uhrzeit`, `Runde`) VALUES ('MAN_".$_POST["name"]."','".$hash."', '', '', '', NULL, NULL)");
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    ".$username." hat den Admin ".$_POST["name"]." registriert\n");
+						fclose($managerLog);
 
 				}
 				else
@@ -178,6 +187,9 @@
 			echo "<script type=\"text/javascript\">
 						window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
 					</script>";
+			$managerLog = fopen("Manager.log", "a");
+			fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich abgemeldet\n");
+			fclose($managerLog);
 		}
 		//Über
 		elseif ($_GET["part"]=="about"&&isset($_GET["part"]))
@@ -201,13 +213,19 @@
 					$mysqli = new mysqli(host,user, password, database);
 					if($mysqli->connect_errno)
 					{
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($managerLog);
 						exit("<script type=\"text/javascript\">
 								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 							</script>");
 					}
-						$mysqli->query("UPDATE ".table." SET Anwesenheit='2' , Vorname='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
-						echo "Erfolgreich";
-						echo "<script type=\"text/javascript\">
+					$mysqli->query("UPDATE ".table." SET Anwesenheit='2' , Vorname='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer: ".$_POST["personnummer"]." abgemeldet\n");
+					fclose($managerLog);
+					echo "Erfolgreich";
+					echo "<script type=\"text/javascript\">
 									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 10);
 								</script>";
 				}
@@ -226,6 +244,9 @@
 					$mysqli = new mysqli(host,user, password, database);
 					if($mysqli->connect_errno)
 					{
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($managerLog);
 						exit("<script type=\"text/javascript\">
 								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 							</script>");
@@ -236,6 +257,9 @@
 					$rounds = intval($rounds);
 					$rounds = $rounds+1;
 					$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' , Uhrzeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]." eine Runde hinzugefügt\n");
+					fclose($managerLog);
 					echo "<script type=\"text/javascript\">
 								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"',0);
 							</script>";
@@ -257,11 +281,17 @@
 						$mysqli = new mysqli(host,user, password, database);
 						if($mysqli->connect_errno)
 						{
+							$managerLog = fopen("Manager.log", "a");
+							fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+							fclose($managerLog);
 							exit("<script type=\"text/javascript\">
 									alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 								</script>");
 						}
 							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+							$managerLog = fopen("Manager.log", "a");
+							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]. "angemeldet\n");
+							fclose($managerLog);
 							echo "Erfolgreich";
 							echo "<script type=\"text/javascript\">
 										window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 10);
@@ -272,6 +302,9 @@
 						$mysqli = new mysqli(host,user, password, database);
 						if($mysqli->connect_errno)
 						{
+							$managerLog = fopen("Manager.log", "a");
+							fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+							fclose($managerLog);
 							exit("<script type=\"text/javascript\">
 									alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 								</script>");
@@ -280,6 +313,9 @@
 						{
 							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$i."' AND Klasse='".$_POST["personnummer"]."'");
 						}
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat die Klasse ".$_POST["personnummer"]." angemeldet\n");
+						fclose($managerLog);
 						echo "Erfolgreich";
 						echo "<script type=\"text/javascript\">
 										window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 10);
@@ -327,12 +363,18 @@
 				$mysqli = new mysqli(host,user, password, database);
 				if($mysqli->connect_errno)
 				{
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+					fclose($managerLog);
 					exit("<script type=\"text/javascript\">
 							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 						</script>");
 				}
 					$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_GET["Name"]."', NULL, '".$_GET["Klasse"]."', '".$_GET["Nummer"]."', '', '', NULL, NULL)");
-					echo "Wurde abgemeldet";
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_GET["Nummer"]." registriert\n");
+					fclose($managerLog);
+					echo "Wurde registriert";
 					echo "<script type=\"text/javascript\">
 								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 10);
 							</script>";
@@ -343,11 +385,14 @@
 			$mysqli = new mysqli(host,user, password, database);
 			if($mysqli->connect_errno)
 			{
+				$managerLog = fopen("Manager.log", "a");
+				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+				fclose($managerLog);
 				exit("<script type=\"text/javascript\">
 						alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 					</script>");
 			}
-			$csv = fopen("export(UTF8).csv","w+");
+			$csv = fopen("Export.csv","w+");
 			fwrite($csv,"Nummer,Name,Klasse,Anwesenheit,Uhrzeit,Ankunftszeit\n");
 				for($i = 1; $i <= maxschueler; $i++)
 				{
@@ -365,8 +410,29 @@
 					}
 				}
 				fclose($csv);
+				$zipname= "./Export.zip";
+				$zip = new ZipArchive();
+				if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
+				{
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("!![%d.%m.%Y_%H:%M]",time())."    Es gabe einen Fehler beim erstellen der export.zip\n");
+					fclose($managerLog);
+				    exit("Es ist ein Fehler beim öffnen der ZIP Datei aufgetreten.\n");
+				}
+				$InfoTXT = fopen("Info.txt", "a");
+				fwrite($InfoTXT, "Erstellt am: ");
+				fwrite($InfoTXT, strftime("%d.%m.%Y_%H:%M",time())."\nExport.csv enthält die Datenbank und ist UTF8 kodiert\nManager.log & Client.log enthalten die Logs vom manager Interface und vom der Eingabe GUI");
+				fclose($InfoTXT);
+					$zip->addFile("Export.csv");
+					$zip->addFile("Client.log");
+					$zip->addFile("Manager.log");
+					$zip->addFile("Info.log");
+					$zip->close();
+				$managerLog = fopen("Manager.log", "a");
+				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat die Logs&Tabellen exportiert\n");
+				fclose($managerLog);
 				echo "<script type=\"text/javascript\">
-							window.setTimeout('location.href=\"".url."/export.csv\"', 0);
+							window.setTimeout('location.href=\"".url."/Export.zip\"', 0);
 						</script>";
 		}
 		else
