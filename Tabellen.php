@@ -38,4 +38,7 @@
           }
         }
         echo "</table>";
+        echo "<script>
+                window.setTimeout('location.href=\"".url."/Tabellen.php\"', 3000);
+              </script>";
       //}

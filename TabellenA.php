@@ -74,4 +74,7 @@
         }
       }
       echo "</table>";
+      echo "<script>
+              window.setTimeout('location.href=\"".url."/TabellenA.php\"', 3000);
+            </script>";
  ?>
