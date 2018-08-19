@@ -81,6 +81,7 @@
 												<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
 												<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
 												<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
+												<input name=\"m1\" value=\"Runde -1\" type=\"submit\">
 											</form>
 											<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
 											<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
@@ -275,6 +276,41 @@
 							</script>";
 				}
 			}
+			elseif (isset($_POST["m1"]))
+			{
+				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
+				{
+					$mysqli = new mysqli(host,user, password, database);
+					if($mysqli->connect_errno)
+					{
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($managerLog);
+						exit("<script type=\"text/javascript\">
+								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
+							</script>");
+					}
+					$rounds = $mysqli->query("SELECT Runde FROM ".table." WHERE Nummer='".$_POST["personnummer"]."'");
+					$rounds = $rounds->fetch_assoc();
+					$rounds = $rounds["Runde"];
+					$rounds = intval($rounds);
+					$rounds = $rounds-1;
+					$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' , Uhrzeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
+					$managerLog = fopen("Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]." eine Runde abgezogen\n");
+					fclose($managerLog);
+					echo "<script type=\"text/javascript\">
+								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"',0);
+							</script>";
+				}
+				else
+				{
+					echo "<script type=\"text/javascript\">
+								alert(\"Bitte fülle das feld aus!\")
+								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
+							</script>";
+				}
+			}
 			elseif (isset($_POST["anmelden"]))
 			{
 				if ($_POST["personnummer"]!=""&&isset($_POST["personnummer"]))
@@ -396,7 +432,7 @@
 					</script>");
 			}
 			$csv = fopen("Export.csv","w+");
-			fwrite($csv,"Nummer,Name,Klasse,Anwesenheit,Uhrzeit,Ankunftszeit\n");
+			fwrite($csv,"Nummer,Name,Klasse,Anwesenheit,Uhrzeit,Ankunftszeit,Abmeldezeit,Runde\n");
 				for($i = 1; $i <= maxschueler; $i++)
 				{
 					$sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'");
@@ -409,7 +445,9 @@
 						.$sqlSelect["Klasse"].","
 						.$sqlSelect["Anwesenheit"].","
 						.strftime("%H:%M", $sqlSelect["Uhrzeit"]).","
-						.$sqlSelect["Ankunftszeit"]."\n");
+						.$sqlSelect["Ankunftszeit"].","
+						.$sqlSelect["Abmeldezeit"].","
+						.$sqlSelect["Runde"]."\n");
 					}
 				}
 				fclose($csv);
@@ -430,7 +468,7 @@
 					$zip->addFile("Export.csv");
 					$zip->addFile("Client.log");
 					$zip->addFile("Manager.log");
-					$zip->addFile("Info.log");
+					$zip->addFile("Info.txt");
 					$zip->close();
 				$managerLog = fopen("Manager.log", "a");
 				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat die Logs&Tabellen exportiert\n");
