@@ -22,7 +22,7 @@
 		        ".name."
 		    </h1>
 			<form action=\"client.php?part=process\" method=\"POST\">
-				<input class=\"fill\" type=\"text\" name=\"content\"><br>
+				<input class=\"fill\" type=\"text\" name=\"data\"><br>
 				<input class=\"button\" type=\"submit\" value=\"Ok\">
 			</form>
 		</body>";
@@ -35,14 +35,18 @@
 		</head>";
 		$mysqli = new mysqli(host,user, password, database);
 		if($mysqli->connect_errno) {
+			header("Custom-Title: FEHLER 403");
+			header("Custom-Message: Es liegt ein Fehler mit der Datenbank vor. Keine Verbindung möglich;");
     		exit("<script type=\"text/javascript\">
 						alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \")
 					</script>");
 		}
 		date_default_timezone_set("Europe/Berlin");
-		$student = $_POST["content"];
+		$student = $_POST["data"];
 		if (is_numeric($student)==false)
 		{
+			header("Custom-Title: FEHLER 418");
+			header("Custom-Message: Keine Gültige Zahl!");
 			exit("<script type=\"text/javascript\">
 					alert(\"Bitte gebe eine gültige Zahl an.\");
 					window.setTimeout('location.href=\"".url."/client.php\"', 10);
@@ -56,17 +60,24 @@
 		$rounds = $rounds->fetch_assoc();
 		$rounds = $rounds["Runde"];
 		$rounds = intval($rounds);
-		$rounds = $rounds+1;
+		$Anwesenheit = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer='".$student."'");
+		$Anwesenheit = $Anwesenheit->fetch_assoc();
+		$Anwesenheit = $Anwesenheit["Anwesenheit"];
+		$Anwesenheit = intval($Anwesenheit);
 		$timestamp = time();
-		if ($result == 0 && $rounds==1){
-		exit("<script type=\"text/javascript\">
-					alert(\"Du wurdest nicht in der Datenbank gefunden. Bitte melde dich beim SV-Stand\")
+		if ($result == 0 && $rounds==1||$Anwesenheit==0){
+			header("Custom-Title: FEHLER 404");
+			header("Custom-Message: Der Schueler wurde nicht Gefunden oder ist nicht Angemeldet!");
+			exit("<script type=\"text/javascript\">
+					alert(\"Du wurdest nicht in der Datenbank gefunden oder bist nicht Angemeldet. Bitte melde dich beim SV-Stand\")
 					window.setTimeout('location.href=\"".url."/client.php\"', 0);
 				</script>");
 		}
 		if ($timestamp>=$result+mintime){
 			$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
 			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
+			header("Custom-Title: Scan gesendet");
+			header("Custom-Message: Dies war Runde: ".$rounds);
 				echo "	<head>
 				    			<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
 									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
@@ -83,6 +94,8 @@
 								</body>";
 		}
 		else{
+			header("Custom-Title: FEHLER 508");
+			header("Custom-Message: Der Schueler ist zu schnell gelaufen! Manuelle Eingabe?");
 			echo "<p>Du warst auffällig schnell, bitte melde dich am SV Stand.<p>
 				<script type=\"text/javascript\">
 					window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
