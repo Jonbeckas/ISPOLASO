@@ -1,0 +1,47 @@
+<head>
+	<title>".name."</title>
+	<link rel=\"stylesheet\" href=\"Interface.css\">
+</head>
+	
+<body>
+	<div id=header>
+		<p id=Titel>".spruch."</p>
+		<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+	</div>
+	<div id=hotbar>
+		<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+			<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+		</form>
+		<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+			<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
+		</form>
+		<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+			<input value=\"Über\" type=\"submit\" id=hbbutt>
+		</form>
+		
+			
+		
+		<form action=\"manager.php?part=export\" method=\"POST\" id=hbpos2>
+			<input value=\"Daten Exportieren\" type=\"submit\" id=hbbutt>
+		</form>
+		
+		<form action=\"manager.php?part=parts\" method=\"POST\" id=hbpos>
+			<input value=\"Schüler/-innen Registrieren\" name=\"sregister\" type=\"submit\" id=hbbutt>
+		</form>
+		</div>
+		<div id=content>
+		<form action=\"manager.php?part=parts\" method=\"POST\">
+			<input name=\"personnummer\" type=\"text\">
+			<select id=\"Oder\" name=\"Oder\">
+				<option value=\"K\">Klasse</option>
+				<option value=\"SuS\">Schüler/-innen</option>
+			</select>
+			<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
+			<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button>
+			<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
+			<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button>
+		</form>
+		<iframe src=\"Tabellen.php\" height=\"600px\" width=\"49%\" id=\"Vermisst\"></iframe>
+		<iframe src=\"TabellenA.php\" height=\"600px\" width=\"49%\" id=\"Allgemein\"></iframe>
+	</div>
+</body>
