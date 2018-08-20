@@ -7,15 +7,16 @@
 </head>
 <body>
 	<?php
+	session_start();
 	//Umleitung
-		if (isset($_GET["part"])==false)
+		if (isset($_GET["part"])==false&&isset($_SESSION["username"])==false&&session_status()==2)
 		{
 			echo "<script type=\"text/javascript\">
 						window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
 					</script>";
 		}
 		//Login
-		elseif ($_GET["part"]=="login"&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="login"&&isset($_GET["part"])&&isset($_SESSION["username"])==false&&session_status()==2)
 		{
 			echo "<form action=\"manager.php?part=interface\" method=\"POST\">
 						<p>Name:</p>
@@ -24,109 +25,127 @@
 						<input name=\"userpassword\" type=\"password\"><br>
 						<input value=\"Anmelden\" type=\"submit\">
 				 </form>";
-		echo isset($USER);
 		}
 		//Dashboard
 		elseif ($_GET["part"]=="interface"&&isset($_GET["part"]))
 		{
+			if (isset($_SESSION["username"])==false&&session_status()==2)
+			{
+				if (isset($USER)==false&&isset($_POST["userpassword"])&&isset($_POST["username"])){
+					$username = $_POST["username"];
+					$userpassword = $_POST["userpassword"];
+					$mysqli = new mysqli(host,user, password, database);
+					if($mysqli->connect_errno)
+					{
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($managerLog);
+						exit("<script type=\"text/javascript\">
+								alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
+							</script>");
+					}
+					$Anwesend=$mysqli->query("SELECT Klasse FROM ".table." WHERE Name='MAN_".$username."'");
+					$Anwesend = $Anwesend->fetch_assoc();
+					$Anwesend = $Anwesend["Klasse"];
+						$mysqli->query("UPDATE ".table." SET Klasse=1 WHERE Name='MAN_".$username."'");
+						$dbpasswd = $mysqli->query("SELECT Vorname FROM ".table." WHERE Name='MAN_".$username."'");
+						$dbpasswd = $dbpasswd->fetch_assoc();
+						$dbpasswd = $dbpasswd["Vorname"];
+							if(password_verify($userpassword,$dbpasswd))
+							{
+								$managerLog = fopen("Manager.log", "a");
+								fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich erfolgreich angemeldet\n");
+								fclose($managerLog);
+								$_SESSION["username"]=$username;
+								//interface
+								echo  "<form action=\"manager.php?part=register\" method=\"POST\">
+													<input value=\"Admin Registrieren\" type=\"submit\">
+												</form>
+												<form action=\"manager.php?part=about\" method=\"POST\">
+													<input value=\"Über\" type=\"submit\">
+												</form>
+												<form action=\"manager.php?part=export\" method=\"POST\">
+													<input value=\"Daten Exportieren\" type=\"submit\">
+												</form>
+												<form action=\"manager.php?part=logout\" method=\"POST\">
+													<input value=\"Ausloggen\" type=\"submit\">
+												</form>
+												<form action=\"manager.php?part=parts\" method=\"POST\">
+													<input value=\"SchülerInnen Registrieren\" name=\"sregister\" type=\"submit\">
+												</form>
+												<form action=\"manager.php?part=parts\" method=\"POST\">
+													<input name=\"personnummer\" type=\"text\">
+													<select id=\"Oder\" name=\"Oder\">
+														<option value=\"K\">Klasse</option>
+														<option value=\"SuS\">SchülerInnen</option>
+													</select>
+													<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
+													<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
+													<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
+													<input name=\"m1\" value=\"Runde -1\" type=\"submit\">
+												</form>
+												<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
+												<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
+												";
+					}
+					else
+					{
+						echo "Es liegt ein Fehler mit deinem Account vor. Ist das Passwort falsch?";
+						$managerLog = fopen("Manager.log", "a");
+						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]."konnte nicht angemeldet werden\n");
+						fclose($managerLog);
+					}
 
-			if (isset($USER)==false&&isset($_POST["userpassword"])&&isset($_POST["username"])){
-				$username = $_POST["username"];
-				$userpassword = $_POST["userpassword"];
-				$mysqli = new mysqli(host,user, password, database);
-				if($mysqli->connect_errno)
-				{
-					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
-					fclose($managerLog);
-					exit("<script type=\"text/javascript\">
-							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
-						</script>");
-				}
-				$Anwesend=$mysqli->query("SELECT Klasse FROM ".table." WHERE Name='MAN_".$username."'");
-				$Anwesend = $Anwesend->fetch_assoc();
-				$Anwesend = $Anwesend["Klasse"];
-					$mysqli->query("UPDATE ".table." SET Klasse=1 WHERE Name='MAN_".$username."'");
-					$dbpasswd = $mysqli->query("SELECT Vorname FROM ".table." WHERE Name='MAN_".$username."'");
-					$dbpasswd = $dbpasswd->fetch_assoc();
-					$dbpasswd = $dbpasswd["Vorname"];
-						if(password_verify($userpassword,$dbpasswd))
-						{
-							$managerLog = fopen("Manager.log", "a");
-							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich erfolgreich angemeldet\n");
-							fclose($managerLog);
-							$USER = $username;
-							//interface
-							echo  "<form action=\"manager.php?part=register\" method=\"POST\">
-												<input value=\"Admin Registrieren\" type=\"submit\">
-											</form>
-											<form action=\"manager.php?part=about\" method=\"POST\">
-												<input value=\"Über\" type=\"submit\">
-											</form>
-											<form action=\"manager.php?part=export\" method=\"POST\">
-												<input value=\"Daten Exportieren\" type=\"submit\">
-											</form>
-											<form action=\"manager.php?part=logout\" method=\"POST\">
-												<input value=\"Ausloggen\" type=\"submit\">
-											</form>
-											<form action=\"manager.php?part=parts\" method=\"POST\">
-												<input value=\"SchülerInnen Registrieren\" name=\"sregister\" type=\"submit\">
-											</form>
-											<form action=\"manager.php?part=parts\" method=\"POST\">
-												<input name=\"personnummer\" type=\"text\">
-												<select id=\"Oder\" name=\"Oder\">
-													<option value=\"K\">Klasse</option>
-													<option value=\"SuS\">SchülerInnen</option>
-												</select>
-												<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
-												<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
-												<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
-												<input name=\"m1\" value=\"Runde -1\" type=\"submit\">
-											</form>
-											<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
-											<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
-											";
 				}
 				else
 				{
-					echo "Es liegt ein Fehler mit deinem Account vor. Ist das Passwort falsch?";
-					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$username."konnte nicht angemeldet werden\n");
-					fclose($managerLog);
+					echo "<script type=\"text/javascript\">
+								window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
+							</script>";
 				}
-
-					}
-
-/*			elseif (isset($USER)) {
-				{
-					echo $USER;
-					echo  "<form action=\"manager.php?part=register\" method=\"POST\">
-										<input value=\"Admin Registrieren\" type=\"submit\">
-									</form>
-									<form action=\"manager.php?part=about\" method=\"POST\">
-										<input value=\"Über\" type=\"submit\">
-									</form>
-									<form action=\"manager.php?part=logout\" method=\"POST\">
-										<input value=\"Ausloggen\" type=\"submit\">
-									</form>
-									<form action=\"manager.php?part=parts\" method=\"POST\">
-										<input name=\"personnummer\" type=\"text\">
-										<input value=\"Schüler Registrieren\" name=\"sregister\" type=\"submit\">
-										<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
-										<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
-										<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
-									</form>";
-				}
-			}*/
+			}
+			elseif (isset($_SESSION["username"])==true&&session_status()==2)
+			{
+				echo  "<form action=\"manager.php?part=register\" method=\"POST\">
+									<input value=\"Admin Registrieren\" type=\"submit\">
+								</form>
+								<form action=\"manager.php?part=about\" method=\"POST\">
+									<input value=\"Über\" type=\"submit\">
+								</form>
+								<form action=\"manager.php?part=export\" method=\"POST\">
+									<input value=\"Daten Exportieren\" type=\"submit\">
+								</form>
+								<form action=\"manager.php?part=logout\" method=\"POST\">
+									<input value=\"Ausloggen\" type=\"submit\">
+								</form>
+								<form action=\"manager.php?part=parts\" method=\"POST\">
+									<input value=\"SchülerInnen Registrieren\" name=\"sregister\" type=\"submit\">
+								</form>
+								<form action=\"manager.php?part=parts\" method=\"POST\">
+									<input name=\"personnummer\" type=\"text\">
+									<select id=\"Oder\" name=\"Oder\">
+										<option value=\"K\">Klasse</option>
+										<option value=\"SuS\">SchülerInnen</option>
+									</select>
+									<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\">
+									<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\">
+									<input name=\"p1\" value=\"Runde +1\" type=\"submit\">
+									<input name=\"m1\" value=\"Runde -1\" type=\"submit\">
+								</form>
+								<iframe src=\"Tabellen.php\" height=\"600px\" width=\"50%\" id=\"Vermisst\"></iframe>
+								<iframe src=\"TabellenA.php\" height=\"600px\" width=\"50%\" id=\"Allgemein\"></iframe>
+								";
+			}
 			else
 			{
-				echo "<script type=\"text/javascript\">
-							window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
-						</script>";
+				echo "Sessions sind deaktiviert";
+				$managerLog = fopen("Manager.log", "a");
+				fwrite($managerLog, strftime("!![%d.%m.%Y_%H:%M]",time())."    Session konnte nicht erstellt werden\n");
+				fclose($managerLog);
 			}
 		}
 		//Register
-		elseif ($_GET["part"]=="register"&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2)
 		{
 			if (isset($_GET["process"])==false)
 			{
@@ -160,7 +179,7 @@
 						$hash =password_hash($_POST["password"],PASSWORD_DEFAULT);
 						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Uhrzeit`, `Runde`) VALUES ('MAN_".$_POST["name"]."','".$hash."', '', '', '', NULL, NULL)");
 						$managerLog = fopen("Manager.log", "a");
-						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    ".$username." hat den Admin ".$_POST["name"]." registriert\n");
+						fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat den Admin ".$_POST["name"]." registriert\n");
 						fclose($managerLog);
 
 				}
@@ -185,15 +204,16 @@
 
 		}
 		//logout
-		elseif ($_GET["part"]=="logout "&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="logout"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2)
 		{
-			unset($USER);
+			$managerLog = fopen("Manager.log", "a");
+			fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat sich abgemeldet\n");
+			fclose($managerLog);
+			session_destroy();
+			session_unset();
 			echo "<script type=\"text/javascript\">
 						window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
 					</script>";
-			$managerLog = fopen("Manager.log", "a");
-			fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich abgemeldet\n");
-			fclose($managerLog);
 		}
 		//Über
 		elseif ($_GET["part"]=="about"&&isset($_GET["part"]))
@@ -202,11 +222,11 @@
 			Design: Florian Weichert<br>
 			Konzept&Idee Jonas Becker & Marten Schiwek<br>
 			ISPOLASO Version 0.1<br>
-			<a href=\"https://github.com/Jonbeckas/ISPOLASO\">GitHub Seite </a>
-			<a href=\"".url.".manager.php?part=interface\">Zurück zum Dashboard</a></p>";
+			<a href=\"https://github.com/Jonbeckas/ISPOLASO\">GitHub Seite </a><br>
+			<a href=\"".url."manager.php?part=interface\">Zurück zum Dashboard</a></p>";
 		}
 		//Parts
-		elseif ($_GET["part"]=="parts"&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="parts"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2)
 		{
 			//Weiterleitung zur Registrierung
 			if (isset($_POST["sregister"])==true)
@@ -243,7 +263,7 @@
 						}
 					}
 					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer: ".$_POST["personnummer"]." abgemeldet\n");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer: ".$_POST["personnummer"]." abgemeldet\n");
 					fclose($managerLog);
 					echo "Erfolgreich";
 					echo "<script type=\"text/javascript\">
@@ -280,7 +300,7 @@
 					$rounds = $rounds+1;
 					$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' , Uhrzeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
 					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]." eine Runde hinzugefügt\n");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_POST["personnummer"]." eine Runde hinzugefügt\n");
 					fclose($managerLog);
 					echo "<script type=\"text/javascript\">
 								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"',0);
@@ -316,7 +336,7 @@
 					$rounds = $rounds-1;
 					$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' , Uhrzeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
 					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]." eine Runde abgezogen\n");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_POST["personnummer"]." eine Runde abgezogen\n");
 					fclose($managerLog);
 					echo "<script type=\"text/javascript\">
 								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"',0);
@@ -349,7 +369,7 @@
 						}
 							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$_POST["personnummer"]."'");
 							$managerLog = fopen("Manager.log", "a");
-							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_POST["personnummer"]. "angemeldet\n");
+							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_POST["personnummer"]. "angemeldet\n");
 							fclose($managerLog);
 							echo "Erfolgreich";
 							echo "<script type=\"text/javascript\">
@@ -373,7 +393,7 @@
 							$mysqli->query("UPDATE ".table." SET Anwesenheit='1', Ankunftszeit='".time()."' WHERE Nummer='".$i."' AND Klasse='".$_POST["personnummer"]."'");
 						}
 						$managerLog = fopen("Manager.log", "a");
-						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat die Klasse ".$_POST["personnummer"]." angemeldet\n");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Klasse ".$_POST["personnummer"]." angemeldet\n");
 						fclose($managerLog);
 						echo "Erfolgreich";
 						echo "<script type=\"text/javascript\">
@@ -400,7 +420,7 @@
 			}
 		}
 		//SuS Registrieren
-		elseif ($_GET["part"]=="anmelden"&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="anmelden"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2)
 		{
 			if (isset($_GET["process"])==false)
 			{
@@ -433,7 +453,7 @@
 				}
 					$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_GET["Name"]."', NULL, '".$_GET["Klasse"]."', '".$_GET["Nummer"]."', '', '', NULL, NULL)");
 					$managerLog = fopen("Manager.log", "a");
-					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat Nummer ".$_GET["Nummer"]." registriert\n");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_GET["Nummer"]." registriert\n");
 					fclose($managerLog);
 					echo "Wurde registriert";
 					echo "<script type=\"text/javascript\">
@@ -442,7 +462,7 @@
 			}
 		}
 		//Exportieren
-		elseif ($_GET["part"]=="export"&&isset($_GET["part"]))
+		elseif ($_GET["part"]=="export"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2)
 		{
 			$mysqli = new mysqli(host,user, password, database);
 			if($mysqli->connect_errno)
@@ -469,7 +489,7 @@
 						.$sqlSelect["Anwesenheit"].","
 						.strftime("%H:%M", $sqlSelect["Uhrzeit"]).","
 						.$sqlSelect["Ankunftszeit"].","
-						.$sqlSelect["Abmeldezeit"].","
+						.$sqlSelect["Vorname"].","
 						.$sqlSelect["Runde"]."\n");
 					}
 				}
@@ -494,7 +514,7 @@
 					$zip->addFile("Info.txt");
 					$zip->close();
 				$managerLog = fopen("Manager.log", "a");
-				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat die Logs&Tabellen exportiert\n");
+				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Logs&Tabellen exportiert\n");
 				fclose($managerLog);
 				echo "<script type=\"text/javascript\">
 							window.setTimeout('location.href=\"".url."/Export.zip\"', 0);
@@ -503,7 +523,7 @@
 		else
 		{
 			echo "<script type=\"text/javascript\">
-						window.setTimeout('location.href=\"".url."/manager.php?part=login\"', 0);
+						window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
 					</script>";
 		}
 	?>
