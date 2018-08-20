@@ -1,0 +1,147 @@
+@charset "UTF-8";
+
+:root {
+    --main-color: #860111;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+h1 {
+    color: var(--main-color);
+}
+
+.button {
+    border-color: var(--main-color);
+    border-style: solid;
+    outline: none;
+    background-color: white;
+    transition-duration: 0.5s;
+    color: grey;
+    border-width: 0.2vw;
+    border-radius: 0.7vw;
+    font-weight: 600;
+}
+
+.button:hover {
+    color: var(--main-color);
+    border-width: 0.6vw;
+    border-radius: 0;
+}
+
+.textfield {
+    border-color: var(--main-color);
+    border-style: solid;
+    outline: none;
+    color: grey;
+    transition-duration: 0.5s;
+    border-width: 0.2vw;
+    border-radius: 0.7vw;
+}
+
+.textfield:focus {
+    border-width: 0.6vw;
+    border-radius: 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * *
+C L I E N T   I N P U T
+* * * * * * * * * * * * * * * * * * * * * * * * */
+
+.client-input {
+    margin: 8vw 8vw auto 8vw;
+}
+
+.client-input h1 {
+    font-size: 8vw;
+    text-align: center;
+}
+
+.client-input form {
+    margin-top: 4vw;
+    display: flex;
+    flex: wrap;
+    height: 4vw;
+}
+
+.client-input form .textfield {
+    width: 78vw;
+    font-size: 1.5vw;
+    padding-left: 1vw;
+}
+
+.client-input form .button {
+    margin-left: 2vw;
+    width: 4vw;
+    font-size: 1.5vw;
+}
+
+
+
+
+
+
+
+/*h1 {
+    font-size: 10vw;
+    color: var(--main-color);
+    width: 100%;
+    text-align: center;
+}
+
+body {
+    margin: 4vw 8vw 4vw 8vw;
+}
+
+form {
+    margin: 2vw;
+    display: flex;
+    flex-wrap: wrap;
+    height: 4vw;
+}
+
+.fill {
+    border-color: grey;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 3px;
+    color: grey;
+    height: 4vw;
+    font-weight: bold;
+    font-size: 2vw;
+    width: calc(100% - 6vw);
+    padding-left: 1vw;
+    outline: none;
+    transition-duration: 0.5s;
+}
+
+.button {
+    margin-left: 2vw;
+    height: 4vw;
+    width: 4vw;
+    border-color: grey;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 3px;
+    color: grey;
+    background-color: white;
+    font-weight: bold;
+    font-size: 1.2vw;
+    outline: none;
+    transition-duration: 0.5s;
+}
+
+.fill:hover {
+    border-color: var(--main-color);
+}
+
+ .fill:focus {
+     border-color: var(--main-color);
+ }
+
+ .button:hover {
+     border-color: var(--main-color);
+ }*/
