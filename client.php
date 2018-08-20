@@ -1,6 +1,10 @@
 <?php
 	//Innitialisierung
 	include "settings.php";
+	if (is_writable("settings.php")==false)
+	{
+		die("Keine Schreibrechte auf dem Server Vorhanden.");
+	}
 	//Wenn Seite ohne Parameter besucht wird
 	if (isset($_GET["part"])!="input")
 	{
