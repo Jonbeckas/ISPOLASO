@@ -1,0 +1,233 @@
+@charset "UTF-8";
+
+:root {
+    --main-color: #860111;
+}
+
+input[type=submit] {
+	color: white;
+    border: 2px solid grey;
+	outline: none;
+	padding: 10px 10px;
+
+}
+
+input[type=submit]:hover {
+	background-color: white;
+	color: black;
+	cursor: pointer;
+	transition-duration: 0.5s;
+
+}
+input[type=submit]:active {
+	outline: none;
+
+}
+
+input[type=text], input[type=password] {
+	border: 2px solid;
+	border-color: #242424;
+	color: #242424;
+    border-radius: 4px;
+	padding: 10px 10px;
+	outline: none;
+	transition-duration: 0.5s;
+}
+
+input[type=text]:hover {
+	border-color: var(--main-color);
+}
+input[type=password]:hover {
+	border-color: var(--main-color);
+}
+input[type=text]:focus {
+	border-color: var(--main-color);
+}
+input[type=password]:focus {
+	border-color: var(--main-color);
+}
+select {
+		border: 2px solid;
+	border-color: #242424;
+	color: #242424;
+    border-radius: 4px;
+	padding: 10px 10px;
+	outline: none;
+	transition-duration: 0.5s;
+}
+select:hover {
+	border-color: var(--main-color);
+}
+
+select:focus {
+	border-color: var(--main-color);
+}
+
+iframe {
+	border-color: var(--main-color);
+	border: 2px solid;
+	outline: none;
+	border-radius: 4px;
+}
+
+#header { background-color: var(--main-color); max-width:100%; height:6%;
+		padding: 0.5%;
+		padding-bottom: 6%;
+		margin-bottom: 0.5%;
+		top:0; bottom:80; right:0;
+		font-size:3vw;
+		line-height:0,75;
+		color: white;
+
+		font-family: "Impact";
+		vertical-align:middle;
+
+}
+
+#content { max-width:100%; height:90%;
+		padding:0.5%;
+		margin-top: 0.5%;
+		top:20; bottom:10; right:0;
+		text-align: juistify;
+		position: relative;
+}
+#content2 { max-width:100%; height:90%;
+		padding:0.5%;
+		margin-top: 0.5%;
+		top:20; bottom:10; right:0;
+		text-align: juistify;
+		position: relative;
+		float: center;
+		text-align: center;
+}
+#hotbar{ background:#242424; max-width:100%; height:4%;
+		padding: 0.5%;
+		position: relative;
+		top:0; bottom:80; right:0;
+		font-size:2vw;
+		line-height:0,75;
+		color:#000;
+}
+
+#hbbutt{
+
+		background-color:#242424;
+		padding:7px 10px;
+		margin: 2px;
+		position: relative;
+		border-radius: 1px;
+}
+
+#hbbutt:hover {
+		background-color:#242424;
+		color:white;
+		border-color: var(--main-color);
+}
+
+#hbbuttg{
+
+		background-color:#5e5e5e;
+		padding:7px 10px;
+		margin: 2px;
+		position: relative;
+		border-radius: 1px;
+}
+
+#hbbuttg:hover {
+		background-color:#5e5e5e;
+		color:white;
+		border-color: var(--main-color);
+}
+
+#hbpos{
+		float:left;
+}
+#hbpos2{
+		float:right;
+}
+#button  {
+		background-color: var(--main-color);
+		border-radius: 4px;
+}
+
+#button:hover {
+		background-color:white;
+		color:#242424;
+		border-color: var(--main-color);
+}
+
+#Allgemein{
+	float: right;
+}
+
+#Vermisst{
+	float: left;
+
+}
+
+#login{
+	font-size:2vw;
+	font-family: "Impact";
+	color: var(--main-color);
+}
+#login2{
+	padding-top:2%;
+
+}
+#Fehlermeldung{
+		font-size:3vw;
+		line-height:0,75;
+		color: var(--main-color);
+		font-family: "Impact";
+		vertical-align:middle;
+}
+#Fehlerbutton  {
+		background-color: var(--main-color);
+		border-radius: 4px;
+		padding:2% 4%;
+		font-size:3vw;
+}
+
+#Fehlerbutton:hover {
+		background-color:white;
+		color:#242424;
+		border-color: var(--main-color);
+}
+#Grau {
+		font-size:3vw;
+		line-height:0,75;
+		color: #242424;
+		font-family: "Impact";
+		vertical-align:middle;
+}
+#Zentrieren {
+		text-align: center;
+}
+#Adminname {
+		text-align: left;
+		font-size:2vw;
+		line-height:0,75;
+		color: white;
+		font-family: "Impact";
+		vertical-align:middle;
+		position: relative;
+		margin-top:1%;
+
+
+}
+#Rechts {
+		float: right;
+
+}
+#TextHB {
+		text-align: left;
+		font-size:2vw;
+		line-height:0,75;
+		color: white;
+		font-family: "Impact";
+		vertical-align:middle;
+}
+#Titel {
+		text-align: center;
+		margin-bottom:-1%
+}
