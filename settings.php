@@ -8,6 +8,7 @@
 
 	//ANDERES
 	define("name","ISPOLASO",true);
+	define("spruch","Gymnasium Vohwinkel Sponsorenlauf 2018",true);
 	define("url","",true);
 	define("mintime",30,true);	//in sekunden
 	define("countdown",1000,true); // in sekunden*1000 ALSO in millisekunden
