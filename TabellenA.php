@@ -40,21 +40,42 @@
         <td>Runde</td>
 
       </tr>";
-      for($i = 1; $i <=maxschueler; $i++)
+      for($i = 0; $i <=maxschueler; $i++)
       {
         if (isset($_POST["GroßKlein"])==true)
         {
-          if ($_POST["GroßKlein"]=="MAX"&&isset($_POST["GroßKlein"])==true)
+          if ($_POST["Auswahl"]=="Nummer")
           {
-            $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MAX(".$_POST["Auswahl"].") FROM ".table.")-".$i.$Suchfeld);
+            if ($_POST["GroßKlein"]=="MAX"&&isset($_POST["GroßKlein"])==true)
+            {
+              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MAX(".$_POST["Auswahl"].") FROM ".table.")-".$i.$Suchfeld);
+            }
+            elseif ($_POST["GroßKlein"]=="MIN"&&isset($_POST["GroßKlein"])==true)
+            {
+              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MIN(".$_POST["Auswahl"].") FROM ".table.")+".$i.$Suchfeld);
+            }
+            else
+            {
+              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
+            }
           }
-          elseif ($_POST["GroßKlein"]=="MIN"&&isset($_POST["GroßKlein"])==true)
+          elseif ($_POST["Auswahl"]=="Runde")
           {
-            $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MIN(".$_POST["Auswahl"].") FROM ".table.")-".$i.$Suchfeld);
-          }
-          else
-          {
-            $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
+            for ($n=0;$n<=maxschueler;$n++)
+            {
+              if ($_POST["GroßKlein"]=="MAX"&&isset($_POST["GroßKlein"])==true)
+              {
+                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MAX(".$_POST["Auswahl"]."-".$i.") FROM ".table.") AND Nummer='".$n."'".$Suchfeld);
+              }
+              elseif ($_POST["GroßKlein"]=="MIN"&&isset($_POST["GroßKlein"])==true)
+              {
+                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MIN(".$_POST["Auswahl"]."+".$i.") FROM ".table.") AND Nummer='".$n."'".$Suchfeld);
+              }
+              else
+              {
+                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
+              }
+            }
           }
         }
         else
@@ -64,21 +85,28 @@
         $sqlSelect=$sqlSelect->fetch_assoc();
         if($sqlSelect["Nummer"]!="")
         {
-          echo
-          "	<tr>
-              <td>".$sqlSelect["Nummer"]."</td>
-              <td>".$sqlSelect["Name"]."</td>
-              <td>".$sqlSelect["Klasse"]."</td>
-              <td>".$sqlSelect["Anwesenheit"]."</td>
-              <td>".strftime("%H:%M", $sqlSelect["Uhrzeit"])."</td>
-              <td>".$sqlSelect["Ankunftszeit"]."</td>
-              <td>".$sqlSelect["Vorname"]."</td>
-              <td>".$sqlSelect["Runde"]."</td>
-            </tr>";
+          if (strpos($sqlSelect["Name"],"MAN")!==false)
+          {
+            echo "";
+          }
+          else
+          {
+              echo
+              "	<tr>
+                  <td>".$sqlSelect["Nummer"]."</td>
+                  <td>".$sqlSelect["Name"]."</td>
+                  <td>".$sqlSelect["Klasse"]."</td>
+                  <td>".$sqlSelect["Anwesenheit"]."</td>
+                  <td>".strftime("%H:%M", $sqlSelect["Uhrzeit"])."</td>
+                  <td>".$sqlSelect["Ankunftszeit"]."</td>
+                  <td>".$sqlSelect["Vorname"]."</td>
+                  <td>".$sqlSelect["Runde"]."</td>
+                </tr>";
+          }
         }
       }
       echo "</table>";
-      echo "<script>
+  /*    echo "<script>
               window.setTimeout('location.href=\"".url."/TabellenA.php\"', 30000);
-            </script>";
+            </script>";*/
  ?>
