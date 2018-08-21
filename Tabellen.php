@@ -9,9 +9,14 @@
             alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
           </script>");
       }
-      echo "<table border=\"1\">";
+      echo "
+      <head>
+        <title>".name."</title>
+        <link rel=\"stylesheet\" href=\"Interface.css\">
+      </head>
+      <table border=\"1\">";
       echo
-      "	<tr>
+      "	<tr id=TabUS >
           <td>Nummer</td>
           <td>Name</td>
           <td>Klasse</td>

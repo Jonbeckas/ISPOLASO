@@ -12,8 +12,8 @@
               <option value=\"MAX\">Groß->Klein</option>
               <option value=\"MIN\">Klein->Groß</option>
             </select>
-            <input name=\"Suche\" type=\"text\">
-            <input value=\"OK\" type=\"submit\">
+            <input name=\"Suche\" type=\"text\" id=eingabeDB>
+            <input value=\"OK\" type=\"submit\" id=button>
               ";
     $mysqli = new mysqli(host,user, password, database);
     if($mysqli->connect_errno)
@@ -27,9 +27,14 @@
     {
       $Suchfeld = " AND ".$_POST["Auswahl"]."='".$_POST["Suche"]."'";
     }
-    echo "<table border=\"1\">";
+    echo "
+    <head>
+      <title>".name."</title>
+      <link rel=\"stylesheet\" href=\"Interface.css\">
+    </head>
+    <table border=\"1\">";
     echo
-    "	<tr>
+    "	<tr id=TabUS>
         <td>Nummer</td>
         <td>Name</td>
         <td>Klasse</td>
