@@ -17,7 +17,7 @@
       <table border=\"1\">";
       echo
       "	<tr id=TabUS >
-          <td>Nummer</td>
+          <td>Nr.</td>
           <td>Name</td>
           <td>Klasse</td>
           <td>Anwesenheit</td>
