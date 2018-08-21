@@ -6,10 +6,12 @@
 
 input[type=submit] {
 	color: white;
-    border: 2px solid grey;
+    border: 2px solid;
+	border-color: grey;
 	outline: none;
-	padding: 10px 10px;
-
+	padding: 1vw 1vh;
+	position:relative;
+	
 }
 
 input[type=submit]:hover {
@@ -28,8 +30,8 @@ input[type=text], input[type=password] {
 	border: 2px solid;
 	border-color: #242424;
 	color: #242424;
-    border-radius: 4px;
-	padding: 10px 10px;
+    border-radius: 0.2vw 0.2vh;
+	padding: 1vw 1vh;
 	outline: none;
 	transition-duration: 0.5s;
 }
@@ -51,7 +53,7 @@ select {
 	border-color: #242424;
 	color: #242424;
     border-radius: 4px;
-	padding: 10px 10px;
+	padding: 1vw 1vh;
 	outline: none;
 	transition-duration: 0.5s;
 }
@@ -70,7 +72,7 @@ iframe {
 	border-radius: 4px;
 }
 
-#header { background-color: var(--main-color); max-width:100%; height:6%;
+#header { background-color: var(--main-color); max-width:100%; height:6%; 
 		padding: 0.5%;
 		padding-bottom: 6%;
 		margin-bottom: 0.5%;
@@ -78,29 +80,39 @@ iframe {
 		font-size:3vw;
 		line-height:0,75;
 		color: white;
-
+		
 		font-family: "Impact";
 		vertical-align:middle;
-
+		
 }
 
-#content { max-width:100%; height:90%;
-		padding:0.5%;
+#content { max-width:100%; height:10%; 
+		padding:0.5% 0.5% 2%;
 		margin-top: 0.5%;
 		top:20; bottom:10; right:0;
 		text-align: juistify;
 		position: relative;
+		
 }
-#content2 { max-width:100%; height:90%;
+#content2 { max-width:100%; height:90%; 
 		padding:0.5%;
-		margin-top: 0.5%;
+		margin-top: 2%;
+		top:20; bottom:10; right:0;
+		text-align: juistify;
+		position: relative;
+		float: left;
+		text-align: left;
+}
+#content3 { max-width:100%; height:90%; 
+		padding:0.5%;
+		margin-top: 2%;
 		top:20; bottom:10; right:0;
 		text-align: juistify;
 		position: relative;
 		float: center;
-		text-align: center;
+		text-align:center;
 }
-#hotbar{ background:#242424; max-width:100%; height:4%;
+#hotbar{ background:#242424; max-width:100%; height:4%; 
 		padding: 0.5%;
 		position: relative;
 		top:0; bottom:80; right:0;
@@ -110,31 +122,24 @@ iframe {
 }
 
 #hbbutt{
-
 		background-color:#242424;
 		padding:7px 10px;
 		margin: 2px;
 		position: relative;
 		border-radius: 1px;
 }
-
-#hbbutt:hover {
-		background-color:#242424;
-		color:white;
-		border-color: var(--main-color);
-}
-
 #hbbuttg{
 
-		background-color:#5e5e5e;
-		padding:7px 10px;
-		margin: 2px;
-		position: relative;
-		border-radius: 1px;
+        background-color:#5e5e5e;
+        padding:7px 10px;
+        margin: 2px;
+        position: relative;
+        border-radius: 1px;
+		opacity: 0.6;
+		cursor: not-allowed;
 }
-
-#hbbuttg:hover {
-		background-color:#5e5e5e;
+#hbbutt:hover {
+		background-color:#242424;
 		color:white;
 		border-color: var(--main-color);
 }
@@ -147,7 +152,7 @@ iframe {
 }
 #button  {
 		background-color: var(--main-color);
-		border-radius: 4px;
+		border-radius: 0.2vw 0.2vh;
 }
 
 #button:hover {
@@ -157,12 +162,16 @@ iframe {
 }
 
 #Allgemein{
+	text-align: center;
 	float: right;
+	width: 63%;
 }
 
 #Vermisst{
+	text-align: center;
 	float: left;
-
+	width:35%;
+	
 }
 
 #login{
@@ -172,7 +181,7 @@ iframe {
 }
 #login2{
 	padding-top:2%;
-
+	
 }
 #Fehlermeldung{
 		font-size:3vw;
@@ -200,6 +209,13 @@ iframe {
 		font-family: "Impact";
 		vertical-align:middle;
 }
+#Grau2 {
+		font-size:2vw;
+		line-height:0,75;
+		color: #242424;
+		font-family: "Impact";
+		vertical-align:middle;
+}
 #Zentrieren {
 		text-align: center;
 }
@@ -212,12 +228,12 @@ iframe {
 		vertical-align:middle;
 		position: relative;
 		margin-top:1%;
-
-
+		
+		
 }
 #Rechts {
 		float: right;
-
+		
 }
 #TextHB {
 		text-align: left;
@@ -230,4 +246,30 @@ iframe {
 #Titel {
 		text-align: center;
 		margin-bottom:-1%
+}
+#iFrame {
+		font-size:2vw;
+		font-family: "Impact";
+		color: var(--main-color);
+		margin-bottom:2%;
+}
+#iFrameA {
+		text-align: right;
+		font-size:2vw;
+		font-family: "Impact";
+		color: var(--main-color);
+		margin-bottom:2%;
+}
+#iFrameV {
+		text-align: left;
+		font-size:2vw;
+		font-family: "Impact";
+		color: var(--main-color);
+		margin-bottom:-4%;
+		position: static;
+}
+#InputRegi {
+		padding: 10px 10px;
+		text-align: left;
+		width:25%;
 }

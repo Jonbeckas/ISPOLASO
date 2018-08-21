@@ -4,6 +4,15 @@
 	{
 		die("Keine Schreibrechte auf dem Server Vorhanden.");
 	}
+	$browser = get_browser(null, true);
+	if($browser["cookies"]=="0")
+	{
+		print_r($browser);
+		die("ISPOLASO benötigt zwingend Cookies");
+	}
+	date_default_timezone_set("Europe/Berlin");
+	$time=time()+600;
+	session_set_cookie_params("31536000");
 ?>
 <head>
 	<title><?php echo name; ?></title>
@@ -132,8 +141,8 @@
 													<form action=\"manager.php?part=parts\" method=\"POST\">
 														<input name=\"personnummer\" type=\"text\">
 														<select id=\"Oder\" name=\"Oder\">
-															<option value=\"K\">Klasse</option>
-															<option value=\"SuS\">Schüler/-innen</option>
+															<option value=\"Nummer\">Schüler/innen</option>
+															<option value=\"Klasse\">Klasse</option>
 														</select>
 														<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
 														<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button>
@@ -170,7 +179,7 @@
 										</div>
 									</body>";
 						$managerLog = fopen("Manager.log", "a");
-						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]."konnte nicht angemeldet werden\n");
+						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$_username."konnte nicht angemeldet werden\n");
 						fclose($managerLog);
 					}
 				}
@@ -242,8 +251,8 @@
 									<form action=\"manager.php?part=parts\" method=\"POST\">
 										<input name=\"personnummer\" type=\"text\">
 										<select id=\"Oder\" name=\"Oder\">
-											<option value=\"K\">Klasse</option>
-											<option value=\"SuS\">Schüler/-innen</option>
+											<option value=\"Nummer\">Schüler/innen</option>
+											<option value=\"Klasse\">Klasse</option>
 										</select>
 										<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
 										<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button>
@@ -284,7 +293,7 @@
 			}
 		}
 		//Register
-		elseif ($_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&$_SESSION["UStufe"]=="1"&&session_status()==2)
+		elseif ($_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&$_SESSION["UStufe"]=="1"||$_SESSION["UStufe"]=="-1"&&session_status()==2)
 		{
 			if (isset($_GET["process"])==false)
 			{
@@ -313,6 +322,7 @@
 									<select id=\"Oder\" name=\"Oder\">
 										<option value=\"1\">1</option>
 										<option value=\"2\">2</option>
+										<option value=\"-1\">-1 (Nur MYSQL)</option>
 									</select>
 									<p id=login>Bitte gebe ein Passwort ein:</p>
 									<input name=\"password\" type=\"password\">
@@ -413,6 +423,7 @@
 											<select id=\"Oder\" name=\"Oder\">
 												<option value=\"1\">1</option>
 												<option value=\"2\">2</option>
+												<option value=\"-1\">-1 (Nur MYSQL)</option>
 											</select>
 										<p id=login>Bitte gebe ein Passwort ein:</p>
 										<input name=\"password\" type=\"password\">
