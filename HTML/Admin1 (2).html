@@ -1,13 +1,14 @@
 <head>
 	<title>".name."</title>
-	<link rel=\"stylesheet\" href=\"Interface.css\">
+	<link rel=\"stylesheet\" href=\"Interface.css\">	
 </head>
 <body>
-<div id=header>
-		<p id=Titel>".spruch."</p>
-		<p id=Adminname>Account: "$_SESSION["username"]"</p>
+	<div id=header>
+		<p id=Titel>".spruch." HOHE RECHTE</p>
+		<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 	</div>
 	<div id=hotbar>
+		<a id=TextHB>Dashboard</a>
 		<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 			<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 		</form>
@@ -17,8 +18,9 @@
 	</div>
 	<div id=content3>
 		<p id=Fehlermeldung>Fehlermeldung</p>
-		<form action=\"manager.php?part=interface\" method=\"POST\" >
-			<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+		<form action=\"manager.php?part=mysql\" method=\"POST\" >
+			<input name=\"befehl\" type=\"Text\" placeholder=\"Hier Werbung einfügen\" id=InputRegi>
+			<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
 		</form>
 	</div>
 </body>

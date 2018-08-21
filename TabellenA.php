@@ -35,11 +35,11 @@
     <table border=\"1\">";
     echo
     "	<tr id=TabUS>
-        <td>Nummer</td>
+        <td>Nr.</td>
         <td>Name</td>
         <td>Klasse</td>
         <td>Anwesenheit</td>
-        <td>Uhrzeit der letzten Runde</td>
+        <td>Uhrzeit der <br> letzten Runde</td>
         <td>Ankunftszeit</td>
         <td>Abmeldezeit</td>
         <td>Runde</td>

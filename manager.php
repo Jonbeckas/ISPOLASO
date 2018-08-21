@@ -16,6 +16,7 @@
 <head>
 	<title><?php echo name; ?></title>
 	<link href="images/icon.png" type="image/png" rel="icon">
+	<meta charset="UTF-8">
 </head>
 <body>
 	<?php
@@ -173,8 +174,8 @@
 										</head>
 										<body>
 										<div id=header>
-												<p id=Titel>".spruch." ACHTUNG HOHE RECHT</p>
-												<p id=Adminname>Account: ".$_SESSION["Username"]."</p>
+												<p id=Titel>".spruch." ACHTUNG HOHE RECHTE</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
 												<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
@@ -189,9 +190,9 @@
 											</div>
 											<div id=content3>
 												<p id=Fehlermeldung>MYSQL Befehl:</p>
-												<form action=\"manager.php?part=MYSQL\" method=\"POST\" >
+												<form action=\"manager.php?part=mysql\" method=\"POST\" >
 													<input name=\"befehl\" type=\"Text\" placeholder=\"FROM ".table."\" id=InputRegi>
-													<input  value=\"Okay\" type=\"submit\" id=button>
+													<input value=\"Okay\" type=\"submit\" id=button>
 												</form>
 											</div>
 										</body>";
@@ -327,8 +328,8 @@
 						</head>
 						<body>
 						<div id=header>
-								<p id=Titel>".spruch." ACHTUNG HOHE RECHT</p>
-								<p id=Adminname>Account: ".$_SESSION["Username"]."</p>
+								<p id=Titel>".spruch." ACHTUNG HOHE RECHTE</p>
+								<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 							</div>
 							<div id=hotbar>
 								<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
@@ -343,7 +344,7 @@
 							</div>
 							<div id=content3>
 								<p id=Fehlermeldung>MYSQL Befehl:</p>
-								<form action=\"manager.php?part=MYSQL\" method=\"POST\" >
+								<form action=\"manager.php?part=mysql\" method=\"POST\" >
 									<input name=\"befehl\" type=\"Text\" placeholder=\"FROM ".table."\" id=InputRegi>
 									<input value=\"Okay\" type=\"submit\" id=button>
 								</form>
@@ -379,7 +380,7 @@
 			}
 		}
 		//Register
-		elseif ($_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&$_SESSION["UStufe"]=="1"||isset($_SESSION["UStufe"])&&$_SESSION["UStufe"]=="-1"&&session_status()==2)
+		elseif ($_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&$_SESSION["UStufe"]=="1"||$_GET["part"]=="register"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&$_SESSION["UStufe"]=="-1"&&isset($_SESSION["UStufe"])&&session_status()==2)
 		{
 			if (isset($_GET["process"])==false)
 			{
@@ -1239,7 +1240,7 @@
 								</div>
 							</body>";
 		}
-		elseif($_GET["part"]=="MYSQL"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&isset($_SESSION["UStufe"])==true&&$_SESSION["UStufe"]=="-1")
+		elseif($_GET["part"]=="mysql"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&isset($_SESSION["UStufe"])==true&&$_SESSION["UStufe"]=="-1")
 		{
 			$mysqli = new mysqli(host,user, password, database);
 			if($mysqli->connect_errno)
@@ -1251,8 +1252,9 @@
 						alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 					</script>");
 			}
-			$befehl = $mysqli->query($_POST["befehl"]);
-			$befehl = $mysqli->fetch_assoc();
+			$sqlSelect = $mysqli->query($_POST["befehl"]);
+			$sqlSelect = $sqlSelect->fetch_assoc();
+			$sqlSelect = print_r($sqlSelect,true);
 			echo "
 			<head>
 				<title>".name."</title>
@@ -1272,7 +1274,7 @@
 					</form>
 				</div>
 				<div id=content3>
-					<p id=Fehlermeldung>Erfolgreich mit der Ausgabe: ".print_r($befehl)."</p>
+					<p id=Fehlermeldung>Erfolgreich mit der Ausgabe: ".$sqlSelect."</p>
 					<form action=\"manager.php?part=interface\" method=\"POST\" >
 						<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 					</form>
