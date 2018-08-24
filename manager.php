@@ -111,59 +111,59 @@
 									echo  "<head>
 														<title>".name."</title>
 														<link rel=\"stylesheet\" href=\"Interface.css\">
-													</head>
+												</head>
+												<body>
+													<div id=header>
+														<p id=Titel>".spruch."</p>
+														<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+													</div>
+													<div id=hotbar>
+														<a id=TextHB>Dashboard</a>
+														<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+															<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+														</form>
+														<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+															<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
+														</form>
+														<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+															<input value=\"Über\" type=\"submit\" id=hbbutt>
+														</form>
+														<form action=\"manager.php?part=export\" method=\"POST\" id=hbpos2>
+															<input value=\"Daten Exportieren\" type=\"submit\" id=hbbutt>
+														</form>
 
-													<body>
-														<div id=header>
-															<p id=Titel>".spruch."</p>
-															<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+														<form action=\"manager.php?part=parts\" method=\"POST\" id=hbpos>
+															<input value=\"Schüler/-in registrieren\" name=\"sregister\" type=\"submit\" id=hbbutt>
+														</form>
+													</div>
+													<div id=content>
+														<p id=login>Anmeldung</p>
+														<form action=\"manager.php?part=parts\" method=\"POST\">
+															<input name=\"personnummer\" type=\"text\" placeholder=\"Nummer eingeben\" id=EingabeDB>
+															<select id=\"Oder\" name=\"Oder\">
+																<option value=\"Nummer\">Schüler/-innen</option>
+																<option value=\"Klasse\">Klasse</option>
+															</select>
+															<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
+															<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
+															<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
+															<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
+														</form>
+													</div>
+													<div id=content2>
+														<div id=TitelTabl>
+															<p id=iFrameV>Auffällig lange abwesend</p>
+															<p id=iFrameA>Übersichtstabelle</p>
+															<p id=Grau2>Die Tabellen aktualisieren sich automatisch und brauchen eine Weile, bis sie angezeigt werden.</p>
 														</div>
-														<div id=hotbar>
-															<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
-																<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
-															</form>
-															<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
-																<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
-															</form>
-															<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
-																<input value=\"Über\" type=\"submit\" id=hbbutt>
-															</form>
-															<form action=\"manager.php?part=export\" method=\"POST\" id=hbpos2>
-																<input value=\"Daten Exportieren\" type=\"submit\" id=hbbutt>
-															</form>
-
-															<form action=\"manager.php?part=parts\" method=\"POST\" id=hbpos>
-																<input value=\"Schüler/-in registrieren\" name=\"sregister\" type=\"submit\" id=hbbutt>
-															</form>
+														<div id=iFrameV>
+															<iframe src=\"Tabellen.html\" height=\"600px\" id=\"Vermisst\"></iframe>
 														</div>
-														<div id=content>
-															<p id=login>Anmeldung</p>
-															<form action=\"manager.php?part=parts\" method=\"POST\">
-																<input name=\"personnummer\" type=\"text\" placeholder=\"Nummer eingeben\" id=EingabeDB>
-																<select id=\"Oder\" name=\"Oder\">
-																	<option value=\"Nummer\">Schüler/-innen</option>
-																	<option value=\"Klasse\">Klasse</option>
-																</select>
-																<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
-																<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
-																<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
-																<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
-															</form>
+														<div id=iFrameA>
+															<iframe src=\"TabellenA.html\" height=\"600px\" id=\"Allgemein\"></iframe>
 														</div>
-														<div id=content2>
-															<div id=TitelTabl>
-																<p id=iFrameV>Auffällig lange abwesend</p>
-																<p id=iFrameA>Übersichtstabelle</p>
-																<p id=Grau2>Die Tabellen aktualisieren sich automatisch und brauchen eine Weile, bis sie angezeigt werden.</p>
-															</div>
-															<div id=iFrameV>
-																<iframe src=\"Tabellen.php\" height=\"600px\" id=\"Vermisst\"></iframe>
-															</div>
-															<div id=iFrameA>
-																<iframe src=\"TabellenA.php\" height=\"600px\" id=\"Allgemein\"></iframe>
-															</div>
-														</div>
-													</body>
+													</div>
+												</body>
 													";
 						}
 						else
@@ -173,14 +173,12 @@
 											<link rel=\"stylesheet\" href=\"Interface.css\">
 										</head>
 										<body>
-										<div id=header>
-												<p id=Titel>".spruch." ACHTUNG HOHE RECHTE</p>
+											<div id=header>
+												<p id=Titel>".spruch." HOHE RECHTE</p>
 												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
-												<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
-													<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
-												</form>
+												<a id=TextHB>Dashboard</a>
 												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 													<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 												</form>
@@ -189,10 +187,10 @@
 												</form>
 											</div>
 											<div id=content3>
-												<p id=Fehlermeldung>MYSQL Befehl:</p>
+												<p id=Fehlermeldung>MYSQL Eingabe:</p>
 												<form action=\"manager.php?part=mysql\" method=\"POST\" >
-													<input name=\"befehl\" type=\"Text\" placeholder=\"FROM ".table."\" id=InputRegi>
-													<input value=\"Okay\" type=\"submit\" id=button>
+													<input name=\"befehl\" type=\"Text\" placeholder=\"SELECT * FROM ".table."\" id=InputRegi>
+													<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
 												</form>
 											</div>
 										</body>";
@@ -201,26 +199,34 @@
 
 					else
 					{
-						echo "<head>
-										<title>".name."</title>
-										<link rel=\"stylesheet\" href=\"Interface.css\">
-									</head>
-									<body>
-										<div id=header>
-											<p>".spruch."</p>
-										</div>
-										<div id=hotbar>
-											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-											<input value=\"Über\" type=\"submit\" id=hbbutt>
-										</form>
-										</div>
-										<div id=content2>
-											<p id=Fehlermeldung>Falsches Passwort</p>
-											<form action=\"manager.php?part=login\" method=\"POST\" >
-												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
-											</form>
-										</div>
-									</body>";
+						echo "echo <head>
+												<title>".name."</title>
+												<link rel=\"stylesheet\" href=\"Interface.css\">
+											</head>
+											<body>
+											<div id=header>
+													<p id=Titel>".spruch."</p>
+												</div>
+												<div id=hotbar>
+													<a id=TextHB>Login-Falsches Passwort/Falscher Benutzername</a>
+													<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+														<input value=\"Über\" type=\"submit\" id=hbbutt>
+													</form>
+												</div>
+												<div id=content>
+													<form action=\"manager.php?part=interface\" method=\"POST\">
+															<p id=login>Name:</p>
+															<input name=\"username\" type=\"text\">
+															<p id=login>Passwort:</p>
+															<div>
+															<input name=\"userpassword\" type=\"password\">
+															</div>
+															<div id=login2>
+															<input value=\"Anmelden\" type=\"submit\" id=button>
+															</div>
+													</form>
+												</div>
+											</body>";
 						$managerLog = fopen("Manager.log", "a");
 						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$_username."konnte nicht angemeldet werden\n");
 						fclose($managerLog);
@@ -234,21 +240,26 @@
 								</head>
 								<body>
 									<div id=header>
-										<p>".spruch."</p>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Login</p>
 									</div>
 									<div id=hotbar>
+										<a id=TextHB>Nachricht</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
 										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-										<input value=\"Über\" type=\"submit\" id=hbbutt>
-									</form>
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
 									</div>
-									<div id=content2>
-										<p id=Fehlermeldung>Bitte melde dich erst an anderen PCs ab.</p>
-										<form action=\"manager.php?part=interface\" method=\"POST\" >
+									<div id=content3>
+										<p id=Fehlermeldung>Bitte melden sie sich erst mit dem Accound von anderen PCs ab!</p>
+										<form action=\"."url"./manager.php?part=login\" method=\"POST\" >
 											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 										</form>
 									</div>
 								</body>";
-				}
+					}
 				}
 				else
 				{
@@ -265,59 +276,59 @@
 					echo  "<head>
 										<title>".name."</title>
 										<link rel=\"stylesheet\" href=\"Interface.css\">
-									</head>
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Dashboard</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+											<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=export\" method=\"POST\" id=hbpos2>
+											<input value=\"Daten Exportieren\" type=\"submit\" id=hbbutt>
+										</form>
 
-									<body>
-										<div id=header>
-											<p id=Titel>".spruch."</p>
-											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										<form action=\"manager.php?part=parts\" method=\"POST\" id=hbpos>
+											<input value=\"Schüler/-in registrieren\" name=\"sregister\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=content>
+										<p id=login>Anmeldung</p>
+										<form action=\"manager.php?part=parts\" method=\"POST\">
+											<input name=\"personnummer\" type=\"text\" placeholder=\"Nummer eingeben\" id=EingabeDB>
+											<select id=\"Oder\" name=\"Oder\">
+												<option value=\"Nummer\">Schüler/-innen</option>
+												<option value=\"Klasse\">Klasse</option>
+											</select>
+											<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
+											<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
+											<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
+											<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
+										</form>
+									</div>
+									<div id=content2>
+										<div id=TitelTabl>
+											<p id=iFrameV>Auffällig lange abwesend</p>
+											<p id=iFrameA>Übersichtstabelle</p>
+											<p id=Grau2>Die Tabellen aktualisieren sich automatisch und brauchen eine Weile, bis sie angezeigt werden.</p>
 										</div>
-										<div id=hotbar>
-											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
-												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
-											</form>
-											<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
-												<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
-											</form>
-											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
-												<input value=\"Über\" type=\"submit\" id=hbbutt>
-											</form>
-											<form action=\"manager.php?part=export\" method=\"POST\" id=hbpos2>
-												<input value=\"Daten Exportieren\" type=\"submit\" id=hbbutt>
-											</form>
-
-											<form action=\"manager.php?part=parts\" method=\"POST\" id=hbpos>
-												<input value=\"Schüler/-in registrieren\" name=\"sregister\" type=\"submit\" id=hbbutt>
-											</form>
+										<div id=iFrameV>
+											<iframe src=\"Tabellen.html\" height=\"600px\" id=\"Vermisst\"></iframe>
 										</div>
-										<div id=content>
-											<p id=login>Anmeldung</p>
-											<form action=\"manager.php?part=parts\" method=\"POST\">
-												<input name=\"personnummer\" type=\"text\" placeholder=\"Nummer eingeben\" id=EingabeDB>
-												<select id=\"Oder\" name=\"Oder\">
-													<option value=\"Nummer\">Schüler/-innen</option>
-													<option value=\"Klasse\">Klasse</option>
-												</select>
-												<input name=\"anmelden\" value=\"Anmelden\" type=\"submit\" id=button>
-												<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
-												<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
-												<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
-											</form>
+										<div id=iFrameA>
+											<iframe src=\"TabellenA.html\" height=\"600px\" id=\"Allgemein\"></iframe>
 										</div>
-										<div id=content2>
-											<div id=TitelTabl>
-												<p id=iFrameV>Auffällig lange abwesend</p>
-												<p id=iFrameA>Übersichtstabelle</p>
-												<p id=Grau2>Die Tabellen aktualisieren sich automatisch und brauchen eine Weile, bis sie angezeigt werden.</p>
-											</div>
-											<div id=iFrameV>
-												<iframe src=\"Tabellen.php\" height=\"600px\" id=\"Vermisst\"></iframe>
-											</div>
-											<div id=iFrameA>
-												<iframe src=\"TabellenA.php\" height=\"600px\" id=\"Allgemein\"></iframe>
-											</div>
-										</div>
-									</body>
+									</div>
+								</body>
 									";
 		}
 		else
@@ -327,14 +338,12 @@
 							<link rel=\"stylesheet\" href=\"Interface.css\">
 						</head>
 						<body>
-						<div id=header>
-								<p id=Titel>".spruch." ACHTUNG HOHE RECHTE</p>
+							<div id=header>
+								<p id=Titel>".spruch." HOHE RECHTE</p>
 								<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 							</div>
 							<div id=hotbar>
-								<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
-									<input value=\"Admin Registrieren\" type=\"submit\" id=hbbutt>
-								</form>
+								<a id=TextHB>Dashboard</a>
 								<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 									<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 								</form>
@@ -343,10 +352,10 @@
 								</form>
 							</div>
 							<div id=content3>
-								<p id=Fehlermeldung>MYSQL Befehl:</p>
+								<p id=Fehlermeldung>MYSQL Eingabe:</p>
 								<form action=\"manager.php?part=mysql\" method=\"POST\" >
-									<input name=\"befehl\" type=\"Text\" placeholder=\"FROM ".table."\" id=InputRegi>
-									<input value=\"Okay\" type=\"submit\" id=button>
+									<input name=\"befehl\" type=\"Text\" placeholder=\"SELECT * FROM ".table."\" id=InputRegi>
+									<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
 								</form>
 							</div>
 						</body>";
@@ -360,16 +369,21 @@
 							</head>
 							<body>
 								<div id=header>
-									<p>".spruch."</p>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Login</p>
 								</div>
 								<div id=hotbar>
+									<a id=TextHB>Nachricht</a>
+									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+										<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+									</form>
 									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-									<input value=\"Über\" type=\"submit\" id=hbbutt>
-								</form>
+										<input value=\"Über\" type=\"submit\" id=hbbutt>
+									</form>
 								</div>
-								<div id=content2>
-									<p id=Fehlermeldung>Sessions sind auf diesem Server deaktiviert</p>
-									<form action=\"manager.php?part=interface\" method=\"POST\" >
+								<div id=content3>
+									<p id=Fehlermeldung>Es konnte keine neue SESSION erstellt werden</p>
+									<form action=\"".url."/manager.php?part=login\" method=\"POST\" >
 										<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 									</form>
 								</div>
@@ -385,15 +399,16 @@
 			if (isset($_GET["process"])==false)
 			{
 				echo "<head>
-									<title>".name."</title>
-									<link rel=\"stylesheet\" href=\"Interface.css\">
+								<title>".name."</title>
+								<link rel=\"stylesheet\" href=\"Interface.css\">
 							</head>
 							<body>
-							<div id=header>
+								<div id=header>
 									<p id=Titel>".spruch."</p>
 									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 								</div>
 								<div id=hotbar>
+									<a id=TextHB>Admin registrieren</a>
 									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 										<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 									</form>
@@ -402,31 +417,29 @@
 									</form>
 								</div>
 								<div id=login2>
-									<div id=login2>
-										<form action=\"manager.php?part=register&process=on\" method=\"POST\">
-											<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
-											<input name=\"name\" type=\"text\" placeholder=\"Bitte gebe den neuen Nutzername ein:\" id=InputRegi>
-											<div id=login2>
-												<input name=\"password\" type=\"password\" placeholder=\"Bitte gebe ein Passwort ein:\" id=InputRegi>
-											</div>
-											<div id=login2>
+									<form action=\"manager.php?part=register&process=on\" method=\"POST\">
+										<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
+										<input name=\"name\" type=\"text\" placeholder=\"Bitte gebe den neuen Nutzername ein:\" id=InputRegi>
+										<div id=login2>
+											<input name=\"password\" type=\"password\" placeholder=\"Bitte gebe ein Passwort ein:\" id=InputRegi>
+										</div>
+										<div id=login2>
 											<input name=\"password2\" type=\"password\" placeholder=\"Bitte wiederhole das Passwort:\" id=InputRegi><br>
-											</div>
-											<p id=login>Bitte gebe die Sicherheitstufe an:</p>
+										</div>
+										<p id=login>Bitte gebe die Sicherheitstufe an:</p>
 											<select id=\"Oder\" name=\"Oder\">
 												<option value=\"1\">1</option>
 												<option value=\"2\">2</option>
 												<option value=\"-1\">-1</option>
 											</select>
-									</div>
-									<div id=login2>
-											<input value=\"Registrieren\" type=\"submit\" id=button>
-
-										</form>
-										 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
-												<input value=\"Abbrechen\" type=\"submit\" id=button>
-										</form>
 								</div>
+								<div id=login2>
+										<input value=\"Registrieren\" type=\"submit\" id=button>
+									 </form>
+									 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+											<input value=\"Abbrechen\" type=\"submit\" id=button>
+									</form>
+									</div>
 							</body>";
 			}
 			elseif (isset($_GET["process"])==true)
@@ -465,7 +478,7 @@
 										<body>
 											<div id=header>
 												<p id=Titel>".spruch."</p>
-												<p id=Adminname>Account:</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
 												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -488,49 +501,48 @@
 				else
 				{
 					echo "<head>
-									<title>".name."</title>
-									<link rel=\"stylesheet\" href=\"Interface.css\">
-							</head>
-							<body>
-								<div id=header>
-									<p id=Titel>".spruch."</p>
-									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
-								</div>
-								<div id=hotbar>
-									<a id=TextHB>Die Passwörter stimmen nicht überein!</a>
-									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
-										<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
-									</form>
-									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
-										<input value=\"Über\" type=\"submit\" id=hbbutt>
-									</form>
-
-								</div>
-								<div id=login2>
-									<form action=\"manager.php?part=register&process=on\" method=\"POST\">
-										<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
-										<input name=\"name\" type=\"text\" placeholder=\"Bitte gebe den neuen Nutzername ein:\" id=InputRegi>
-										<div id=login2>
-											<input name=\"password\" type=\"password\" placeholder=\"Bitte gebe ein Passwort ein:\" id=InputRegi>
-										</div>
-										<div id=login2>
-											<input name=\"password2\" type=\"password\" placeholder=\"Bitte wiederhole das Passwort:\" id=InputRegi><br>
-										</div>
-										<p id=login>Bitte gebe die Sicherheitstufe an:</p>
-										<select id=\"Oder\" name=\"Oder\">
-											<option value=\"1\">1</option>
-											<option value=\"2\">2</option>
-											<option value=\"-1\">-1</option>
-										</select>
-								</div>
-								<div id=login2>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Admin registrieren | Die Passwörter stimmen nicht überein!</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=login2>
+										<form action=\"manager.php?part=register&process=on\" method=\"POST\">
+											<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
+												<input name=\"name\" type=\"text\" placeholder=\"Bitte gebe den neuen Nutzername ein:\" id=InputRegi>
+											<div id=login2>
+												<input name=\"password\" type=\"password\" placeholder=\"Bitte gebe ein Passwort ein:\" id=InputRegi>
+											</div>
+											<div id=login2>
+												<input name=\"password2\" type=\"password\" placeholder=\"Bitte wiederhole das Passwort:\" id=InputRegi><br>
+											</div>
+											<p id=login>Bitte gebe die Sicherheitstufe an:</p>
+											<select id=\"Oder\" name=\"Oder\">
+												<option value=\"1\">1</option>
+												<option value=\"2\">2</option>
+												<option value=\"-1\">-1</option>
+											</select>
+									</div>
+									<div id=login2>
 											<input value=\"Registrieren\" type=\"submit\" id=button>
-									</form>
-									<form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
-										<input value=\"Abbrechen\" type=\"submit\" id=button>
-									</form>
-								</div>
-							</body>";
+										</form>
+										<form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+											<input value=\"Abbrechen\" type=\"submit\" id=button>
+										</form>
+									</div>
+								</body>";
 				}
 
 			}
@@ -569,43 +581,12 @@
 								<link rel=\"stylesheet\" href=\"Interface.css\">
 							</head>
 							<body>
-							<div id=header>
-									<p id=Titel>".spruch."</p>
-								</div>
-								<div id=hotbar>
-									<form action=\"manager.php?part=login\" method=\"POST\" id=hbpos2>
-										<input value=\"Einloggen\" type=\"submit\" id=hbbutt>
-									</form>
-									<form action=\"https://github.com/Jonbeckas/ISPOLASO\" id=hbpos>
-											<input value=\"GitHub Seite\" type=\"submit\" id=hbbutt>
-									</form>
-									<form action=\"https://github.com/Jonbeckas/ISPOLASO/wiki/Übersicht\" id=hbpos>
-											<input value=\"ISPOLASO Wiki\" type=\"submit\" id=hbbutt>
-									</form>
-									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
-										<input value=\"Über\" type=\"submit\" id=hbbutt>
-									</form>
-								</div>
-								<div id=content>
-									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
-									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.6 BETA</a><br></p>
-								</div>
-							</body>";
-			}
-			elseif (isset($_SESSION["username"])==true&&session_status()==2)
-			{
-				echo "<head>
-								<title>".name."</title>
-								<link rel=\"stylesheet\" href=\"Interface.css\">
-							</head>
-							<body>
-							<div id=header>
+								<div id=header>
 									<p id=Titel>".spruch."</p>
 									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 								</div>
 								<div id=hotbar>
+									<a id=TextHB>Über</a>
 									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 										<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 									</form>
@@ -619,14 +600,48 @@
 											<input value=\"GitHub Seite\" type=\"submit\" id=hbbutt>
 									</form>
 									<form action=\"https://github.com/Jonbeckas/ISPOLASO/wiki/Übersicht\" id=hbpos>
-											<input value=\"ISPOLASO Wiki\" type=\"submit\" id=hbbutt>
+										<input value=\"ISPOLASO Wiki\" type=\"submit\" id=hbbutt>
 									</form>
 								</div>
 								<div id=content>
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.6 BETA</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 0.7</a><br></p>
+								</div>
+							</body>";
+			}
+			elseif (isset($_SESSION["username"])==true&&session_status()==2)
+			{
+				echo "<head>
+								<title>".name."</title>
+								<link rel=\"stylesheet\" href=\"Interface.css\">
+							</head>
+							<body>
+								<div id=header>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+								</div>
+								<div id=hotbar>
+									<a id=TextHB>Über</a>
+									<form action=\"manager.php?part=login\" method=\"POST\" id=hbpos2>
+										<input value=\"Zum Login\" type=\"submit\" id=hbbutt>
+									</form>
+									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+										<input value=\"Über\" type=\"submit\" id=hbbutt>
+									</form>
+									<form action=\"https://github.com/Jonbeckas/ISPOLASO\" id=hbpos>
+											<input value=\"GitHub Seite\" type=\"submit\" id=hbbutt>
+									</form>
+									<form action=\"https://github.com/Jonbeckas/ISPOLASO/wiki/Übersicht\" id=hbpos>
+										<input value=\"ISPOLASO Wiki\" type=\"submit\" id=hbbutt>
+									</form>
+								</div>
+								<div id=content>
+									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
+									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
+									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
+									<a id=Fehlermeldung>ISPOLASO Version 0.7</a><br></p>
 								</div>
 							</body>";
 			}
@@ -677,26 +692,28 @@
 							echo "<head>
 											<title>".name."</title>
 											<link rel=\"stylesheet\" href=\"Interface.css\">
-									</head>
-									<body>
-									<div id=header>
-											<p>".spruch."</p>
-										</div>
-										<div id=hotbar>
-											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
-												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
-											</form>
-											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-												<input value=\"Über\" type=\"submit\" id=hbbutt>
-											</form>
-										</div>
-										<div id=content2>
-											<p id=Fehlermeldung>Nummer ".$_POST["personnummer"]." wurde erfolgreich abgemeldet</p>
-											<form action=\"manager.php?part=interface\" method=\"POST\" >
-												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
-											</form>
-										</div>
-									</body>";
+										</head>
+										<body>
+											<div id=header>
+												<p id=Titel>".spruch."</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+											</div>
+											<div id=hotbar>
+												<a id=TextHB>Nachricht</a>
+												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+													<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+												</form>
+												<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+													<input value=\"Über\" type=\"submit\" id=hbbutt>
+												</form>
+											</div>
+											<div id=content3>
+												<p id=Fehlermeldung>Schülerinn Nummer ".$_POST["personnummer"]."</p>
+												<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+													<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+												</form>
+											</div>
+										</body>";
 						}
 						elseif($aog["Anwesenheit"]=="2")
 						{
@@ -706,7 +723,8 @@
 									</head>
 									<body>
 									<div id=header>
-											<p>".spruch."</p>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 										</div>
 										<div id=hotbar>
 											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -732,7 +750,8 @@
 								</head>
 								<body>
 								<div id=header>
-										<p>".spruch."</p>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 									</div>
 									<div id=hotbar>
 										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -794,7 +813,8 @@
 							</head>
 							<body>
 							<div id=header>
-									<p>".spruch."</p>
+								<p id=Titel>".spruch."</p>
+								<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 								</div>
 								<div id=hotbar>
 									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -861,7 +881,8 @@
 								</head>
 								<body>
 								<div id=header>
-										<p>".spruch."</p>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 									</div>
 									<div id=hotbar>
 										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -928,8 +949,9 @@
 										<link rel=\"stylesheet\" href=\"Interface.css\">
 								</head>
 								<body>
-								<div id=header>
-										<p>".spruch."</p>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 									</div>
 									<div id=hotbar>
 										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -993,8 +1015,9 @@
 												<link rel=\"stylesheet\" href=\"Interface.css\">
 										</head>
 										<body>
-										<div id=header>
-												<p>".spruch."</p>
+											<div id=header>
+												<p id=Titel>".spruch."</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
 												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
@@ -1115,7 +1138,8 @@
 									</head>
 									<body>
 										<div id=header>
-											<p>".spruch."</p>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 										</div>
 										<div id=hotbar>
 											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
@@ -1141,7 +1165,8 @@
 										</head>
 										<body>
 											<div id=header>
-												<p>".spruch."</p>
+												<p id=Titel>".spruch."</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
 												<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
@@ -1225,7 +1250,8 @@
 							</head>
 							<body>
 								<div id=header>
-									<p>".spruch."</p>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 								</div>
 								<div id=hotbar>
 									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >

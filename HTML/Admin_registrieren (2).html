@@ -5,7 +5,7 @@
 <body>
 	<div id=header>
 		<p id=Titel>".spruch."</p>
-		<p id=Adminname>Account:</p>
+		<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 	</div>
 	<div id=hotbar>
 		<a id=TextHB>Admin registrieren</a>
@@ -43,13 +43,13 @@
 </body>
 -----------------------------------------------------------------------------------------
 <head>
-		<title>Knopftest</title>
+		<title>".name."</title>
 		<link rel=\"stylesheet\" href=\"Interface.css\">
 </head>
 <body>
 	<div id=header>
-		<p id=Titel>Gymnasium Vohwinkel Sponsorenlauf 2018</p>
-		<p id=Adminname>Account:</p>
+		<p id=Titel>".spruch."</p>
+		<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 	</div>
 	<div id=hotbar>
 		<a id=TextHB>Admin registrieren | Die Passwörter stimmen nicht überein!</a>
