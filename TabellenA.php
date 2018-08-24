@@ -64,17 +64,37 @@
       {
         if (strstr($sqlSelect[$i]["Name"],"MAN_")===false)
         {
-          echo
-                "	<tr>
-                    <td>".$sqlSelect[$i]["Nummer"]."</td>
-                    <td>".$sqlSelect[$i]["Name"]."</td>
-                    <td>".$sqlSelect[$i]["Klasse"]."</td>
-                    <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
-                    <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
-                    <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
-                    <td>".$sqlSelect[$i]["Vorname"]."</td>
-                    <td>".$sqlSelect[$i]["Runde"]."</td>
-                  </tr>";
+          if (isset($_POST["Suche"]))
+          {
+            if ($sqlSelect[$i][$_POST["Auswahl"]]==$_POST["Suche"])
+            {
+              echo
+                    "	<tr>
+                        <td>".$sqlSelect[$i]["Nummer"]."</td>
+                        <td>".$sqlSelect[$i]["Name"]."</td>
+                        <td>".$sqlSelect[$i]["Klasse"]."</td>
+                        <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                        <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
+                        <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+                        <td>".$sqlSelect[$i]["Vorname"]."</td>
+                        <td>".$sqlSelect[$i]["Runde"]."</td>
+                      </tr>";
+            }
+          }
+          else
+          {
+            echo
+                  "	<tr>
+                      <td>".$sqlSelect[$i]["Nummer"]."</td>
+                      <td>".$sqlSelect[$i]["Name"]."</td>
+                      <td>".$sqlSelect[$i]["Klasse"]."</td>
+                      <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                      <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
+                      <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+                      <td>".$sqlSelect[$i]["Vorname"]."</td>
+                      <td>".$sqlSelect[$i]["Runde"]."</td>
+                    </tr>";
+          }
         }
       }
       echo "</table>";
