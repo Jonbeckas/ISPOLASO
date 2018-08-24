@@ -590,7 +590,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.5 BETA</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 0.6 BETA</a><br></p>
 								</div>
 							</body>";
 			}
@@ -626,7 +626,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.5 BETA</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 0.6 BETA</a><br></p>
 								</div>
 							</body>";
 			}
@@ -1252,6 +1252,7 @@
 						alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 					</script>");
 			}
+			$sqlSelect = "";
 			$sqlSelect = $mysqli->query($_POST["befehl"]);
 			$sqlSelect = $sqlSelect->fetch_assoc();
 			$sqlSelect = print_r($sqlSelect,true);
