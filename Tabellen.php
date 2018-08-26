@@ -1,7 +1,5 @@
 <?php
   	include "settings.php";
-  //  if ($_GET["part"]=="Vermisst"&&isset("Vermisst"))
-    //{
       $mysqli = new mysqli(host,user, password, database);
       if($mysqli->connect_errno)
       {
@@ -25,20 +23,22 @@
           <td>Ankunftszeit</td>
 
         </tr>";
-        for($i = time()-18900; $i <= time()-2700; $i++)
+        $result = $mysqli->query("SELECT * FROM ".table);
+        for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
+        $sort  = array_column($sqlSelect, 'Uhrzeit');
+        array_multisort($sort, SORT_DESC, $sqlSelect);
+        for($i = 0; $i < count($sqlSelect); $i++)
         {
-          $sqlSelect = $mysqli->query("SELECT * FROM `schueler` WHERE Uhrzeit='".$i."' AND Anwesenheit='1'");
-          $sqlSelect=$sqlSelect->fetch_assoc();
-          if($sqlSelect["Nummer"]!="")
+          if($sqlSelect[$i]["Nummer"]!=""&&$sqlSelect[$i]["Anwesenheit"]=="1"&&strstr($sqlSelect[$i]["Name"],"MAN_")===false&&$sqlSelect[$i]["Uhrzeit"]!=""&&$sqlSelect[$i]["Uhrzeit"]!="0"&&$sqlSelect[$i]["Uhrzeit"] <= time()-2700)
           {
             echo
             "	<tr>
-                <td>".$sqlSelect["Nummer"]."</td>
-                <td>".$sqlSelect["Name"]."</td>
-                <td>".$sqlSelect["Klasse"]."</td>
-                <td>".$sqlSelect["Anwesenheit"]."</td>
-                <td>".round((time()-$sqlSelect["Uhrzeit"])/(60),0)." Min.</td>
-                <td>".$sqlSelect["Ankunftszeit"]."</td>
+                <td>".$sqlSelect[$i]["Nummer"]."</td>
+                <td>".$sqlSelect[$i]["Name"]."</td>
+                <td>".$sqlSelect[$i]["Klasse"]."</td>
+                <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                <td>".round((time()-$sqlSelect[$i]["Uhrzeit"])/(60),0)." Min.</td>
+                <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
               </tr>";
           }
         }
@@ -46,4 +46,4 @@
         echo "<script>
                 window.setTimeout('location.href=\"".url."/Tabellen.php\"', 3000);
               </script>";
-      //}
+?>

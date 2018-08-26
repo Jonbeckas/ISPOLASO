@@ -5,6 +5,13 @@
 	{
 		die("Keine Schreibrechte auf dem Server Vorhanden.");
 	}
+	if(file_exists("./Logs/")==false)
+	{
+		mkdir("./Logs/");
+		$clientLog = fopen("./Logs/.htaccess", "a");
+		fwrite($clientLog, "<Files \"*.*\">\nDeny from all\n</Files>");
+		fclose($clientLog);
+	}
 	//Wenn Seite ohne Parameter besucht wird
 	if (isset($_GET["part"])!="input")
 	{
@@ -40,7 +47,7 @@
 		$mysqli = new mysqli(host,user, password, database);
 		if($mysqli->connect_errno)
 		{
-			$clientLog = fopen("Client.log", "a");
+			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
 			fclose($clientLog);
 			header("Custom-Title: FEHLER 403");
@@ -53,7 +60,7 @@
 		$student = $_POST["data"];
 		if (is_numeric($student)==false)
 		{
-			$clientLog = fopen("Client.log", "a");
+			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$student." war keine richtige Zahl\n");
 			fclose($clientLog);
 			header("Custom-Title: FEHLER 418");
@@ -78,7 +85,7 @@
 		$timestamp = time();
 		if ($result == 0 && $rounds==1||$Anwesenheit==0)
 		{
-			$clientLog = fopen("Client.log", "a");
+			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." war nicht Angemeldet oder nicht gefunden\n");
 			fclose($clientLog);
 			header("Custom-Title: FEHLER 404");
@@ -91,7 +98,7 @@
 		if ($timestamp>=$result+mintime){
 			$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
 			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
-			$clientLog = fopen("Client.log", "a");
+			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat Runde ".$rounds." gelaufen\n");
 			fclose($clientLog);
 			header("Custom-Title: Scan gesendet");
@@ -116,7 +123,7 @@
 			$zuschnell=time()-$result;
 			header("Custom-Title: FEHLER 508");
 			header("Custom-Message: Der Schueler ist ".$zuschnell." Sek. zu schnell gelaufen! Manuelle Eingabe?");
-			$clientLog = fopen("Client.log", "a");
+			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." war ".$zuschnell." Sek. zu schnell\n");
 			fclose($clientLog);
 			echo "<p>Du warst auffällig schnell, bitte melde dich am SV Stand.<p>

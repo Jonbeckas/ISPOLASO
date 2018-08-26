@@ -131,11 +131,11 @@ iframe {
 }
 #hbbuttg{
 
-        background-color:#5e5e5e;
+        background-color:grey;
         padding:0.9vh 1vw;
         position: relative;
         border:none;
-		display: none;
+		    display: none;
 }
 #hbbutt:hover {
 		background-color:white;
@@ -175,13 +175,13 @@ iframe {
 		margin-left:-8px;
 		z-index: 1;
 }
-#Allgemein{
+#Allgemein{ /*Neu*/
 	text-align: center;
 	float: right;
 	width: 55%;
 }
 
-#Vermisst{
+#Vermisst{ /*Neu*/
 	text-align: center;
 	float: left;
 	width:43%;
@@ -189,9 +189,10 @@ iframe {
 }
 
 #login{
-	font-size:2vw;
-	font-family: "Impact";
-	color: var(--main-color);
+    font-size:2vw;
+    font-family: "Impact";
+    color: var(--main-color);
+    margin-bottom: -0%;
 }
 #login2{
 	padding-top:2%;
@@ -236,17 +237,19 @@ iframe {
 		text-align: center;
 }
 #Adminname {
-        text-align: left;
-        font-size:2vw;
-        line-height:0,75;
-        color: white;
-        font-family: "Impact";
-        vertical-align:top;
-        position: absolute;
-        top:0; bottom:800; left:20;
-        margin-top:1%;
-        z-index: 1;
-        padding-top:2%;
+		text-align: left;
+		font-size:2vw;
+		line-height:0,75;
+		color: white;
+		font-family: "Impact";
+		vertical-align:top;
+		position: absolute;
+		top:0; bottom:800; left:20;
+		margin-top:1%;
+		z-index: 1;
+		padding-top:2%;
+
+
 }
 #Rechts {
 		float: right;
@@ -288,9 +291,9 @@ iframe {
 		position: static;
 }
 #InputRegi {
-		padding: 1vw 2vh;
+		padding: 2vh 1vw 2vh;
 		text-align: left;
-		width:25%;
+		width:45%;
 }
 #EingabeDB {
 		float:left;
@@ -298,16 +301,18 @@ iframe {
 }
 table {
     border-collapse: collapse;
-    margin-top: 2%;
+	margin-top:2%;
+
 }
 
-table, td, th {
+table, td, th, {
     border: 1px solid #242424;
-    color: #242424;
+	color: #242424;
 }
 #TabUS {
 	font-family: "Impact";
 	color: var(--main-color);
+}
 }
 #TitelTabl {
 	margin: 3% 0% 0%;

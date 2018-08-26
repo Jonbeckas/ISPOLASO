@@ -1,16 +1,16 @@
 <?php
     include "settings.php";
-    print_r($_POST);
     echo "<form action=\"TabellenA.php\" method=\"POST\">
             <select id=\"Auswahl\" name=\"Auswahl\">
               <option value=\"Runde\">Rundenanzahl</option>
               <option value=\"Anwesenheit\">Anwesenheit</option>
               <option value=\"Klasse\">Klasse</option>
               <option value=\"Nummer\">Nummer</option>
+              <option value=\"Name\">Name</option>
             </select>
             <select id=\"GroßKlein\" name=\"GroßKlein\">
-              <option value=\"MAX\">Groß->Klein</option>
-              <option value=\"MIN\">Klein->Groß</option>
+              <option value=\"SORT_DESC \">Groß->Klein (Absteigend)</option>
+              <option value=\"SORT_ASC\">Klein->Groß (Aufsteigend)</option>
             </select>
             <input name=\"Suche\" type=\"text\" id=eingabeDB>
             <input value=\"OK\" type=\"submit\" id=button>
@@ -21,11 +21,6 @@
       exit("<script type=\"text/javascript\">
           alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
         </script>");
-    }
-    $Suchfeld = "";
-    if (isset($_POST["Suche"])==true&&$_POST["Suche"]!="")
-    {
-      $Suchfeld = " AND ".$_POST["Auswahl"]."='".$_POST["Suche"]."'";
     }
     echo "
     <head>
@@ -45,73 +40,65 @@
         <td>Runde</td>
 
       </tr>";
-      for($i = 0; $i <=maxschueler; $i++)
-      {
-        if (isset($_POST["GroßKlein"])==true)
+      $result = $mysqli->query("SELECT * FROM ".table);
+      for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
+        if (isset($_POST["GroßKlein"])==true&&isset($_POST["Auswahl"])==true)
         {
-          if ($_POST["Auswahl"]=="Nummer")
+          $sort  = array_column($sqlSelect, $_POST["Auswahl"]);
+          if ($_POST["GroßKlein"] == "SORT_DESC")
           {
-            if ($_POST["GroßKlein"]=="MAX"&&isset($_POST["GroßKlein"])==true)
-            {
-              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MAX(".$_POST["Auswahl"].") FROM ".table.")-".$i.$Suchfeld);
-            }
-            elseif ($_POST["GroßKlein"]=="MIN"&&isset($_POST["GroßKlein"])==true)
-            {
-              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MIN(".$_POST["Auswahl"].") FROM ".table.")+".$i.$Suchfeld);
-            }
-            else
-            {
-              $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
-            }
+            array_multisort($sort, SORT_DESC, $sqlSelect);
           }
-          elseif ($_POST["Auswahl"]=="Runde")
+          elseif ($_POST["GroßKlein"] == "SORT_ASC")
           {
-            for ($n=0;$n<=maxschueler;$n++)
-            {
-              if ($_POST["GroßKlein"]=="MAX"&&isset($_POST["GroßKlein"])==true)
-              {
-                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MAX(".$_POST["Auswahl"]."-".$i.") FROM ".table.") AND Nummer='".$n."'".$Suchfeld);
-              }
-              elseif ($_POST["GroßKlein"]=="MIN"&&isset($_POST["GroßKlein"])==true)
-              {
-                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE ".$_POST["Auswahl"]."=(SELECT MIN(".$_POST["Auswahl"]."+".$i.") FROM ".table.") AND Nummer='".$n."'".$Suchfeld);
-              }
-              else
-              {
-                $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
-              }
-            }
+            array_multisort($sort, SORT_ASC, $sqlSelect);
           }
         }
         else
         {
-          $sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'".$Suchfeld);
+            $sort  = array_column($sqlSelect, "Nummer");
+            array_multisort($sort, SORT_ASC, $sqlSelect);
         }
-        $sqlSelect=$sqlSelect->fetch_assoc();
-        if($sqlSelect["Nummer"]!="")
+
+      for($i=0;$i<count($sqlSelect);$i++)
+      {
+        if (strstr($sqlSelect[$i]["Name"],"MAN_")===false)
         {
-          if (strpos($sqlSelect["Name"],"MAN")!==false)
+          if (isset($_POST["Suche"]))
           {
-            echo "";
+            if ($sqlSelect[$i][$_POST["Auswahl"]]==$_POST["Suche"])
+            {
+              echo
+                    "	<tr>
+                        <td>".$sqlSelect[$i]["Nummer"]."</td>
+                        <td>".$sqlSelect[$i]["Name"]."</td>
+                        <td>".$sqlSelect[$i]["Klasse"]."</td>
+                        <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                        <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
+                        <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+                        <td>".$sqlSelect[$i]["Vorname"]."</td>
+                        <td>".$sqlSelect[$i]["Runde"]."</td>
+                      </tr>";
+            }
           }
           else
           {
-              echo
-              "	<tr>
-                  <td>".$sqlSelect["Nummer"]."</td>
-                  <td>".$sqlSelect["Name"]."</td>
-                  <td>".$sqlSelect["Klasse"]."</td>
-                  <td>".$sqlSelect["Anwesenheit"]."</td>
-                  <td>".strftime("%H:%M", $sqlSelect["Uhrzeit"])."</td>
-                  <td>".$sqlSelect["Ankunftszeit"]."</td>
-                  <td>".$sqlSelect["Vorname"]."</td>
-                  <td>".$sqlSelect["Runde"]."</td>
-                </tr>";
+            echo
+                  "	<tr>
+                      <td>".$sqlSelect[$i]["Nummer"]."</td>
+                      <td>".$sqlSelect[$i]["Name"]."</td>
+                      <td>".$sqlSelect[$i]["Klasse"]."</td>
+                      <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                      <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
+                      <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+                      <td>".$sqlSelect[$i]["Vorname"]."</td>
+                      <td>".$sqlSelect[$i]["Runde"]."</td>
+                    </tr>";
           }
         }
       }
       echo "</table>";
-  /*    echo "<script>
+      echo "<script>
               window.setTimeout('location.href=\"".url."/TabellenA.php\"', 30000);
-            </script>";*/
+            </script>";
  ?>
