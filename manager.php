@@ -19,6 +19,39 @@
 	}
 	date_default_timezone_set("Europe/Berlin");
 	session_set_cookie_params("31536000");
+	function shutDownFunction()
+	{
+		$error = error_get_last();
+		if ($error['type'] === E_ERROR)
+		{ 
+			die( "<head>
+							<title>".name."</title>
+							<link rel=\"stylesheet\" href=\"Interface.css\">
+						</head>
+						<body>
+							<div id=header>
+								<p id=Titel>".spruch."</p>
+								<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+							</div>
+							<div id=hotbar>
+								<a id=TextHB>Nachricht</a>
+								<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+									<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+								</form>
+								<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+									<input value=\"Über\" type=\"submit\" id=hbbutt>
+								</form>
+							</div>
+							<div id=content3>
+								<p id=Fehlermeldung>es ist ein Fehler aufgetreten, die Aktion wurde nicht ausgeführt.</p>
+								<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+									<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+								</form>
+							</div>
+						</body>");
+			}
+	}
+	register_shutdown_function('shutDownFunction');
 ?>
 <head>
 	<title><?php echo name; ?></title>
@@ -130,7 +163,7 @@
 														<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 															<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 														</form>
-														<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos2>
+														<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
 															<input value=\"Admin Registrieren\" type=\"submit\" id=".$_SESSION["Button"].">
 														</form>
 														<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
@@ -612,7 +645,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.8</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.0</a><br></p>
 								</div>
 							</body>";
 			}
@@ -649,7 +682,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 0.8</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.0</a><br></p>
 								</div>
 							</body>";
 			}
@@ -674,23 +707,68 @@
 							</script>");
 					}
 					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
-					if ($anwesend == "1")
+					if ($anwesend["Anwesenheit"] == "1")
 					{
 						$runden = $mysqli->query("SELECT Runde FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
 						$runden = $runden["Runde"]+1;
 						$mysqli->query("UPDATE ".table." SET Runde='".$runden."' WHERE Nummer=".$_POST["personnummer"]);
-						echo "<script type=\"text/javascript\">
-									alert(\"Dem Schüler/ Der Schülerin wurde eine Runde hinzugefügt.\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						$managerLog = fopen("./Logs/Manager.log", "a");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." wurde eine Runde hinzugefügt\n");
+						fclose($managerLog);
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." wurde eine Runde hinzugefügt.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 					//fals nicht anwesend
 					else
 					{
-						echo "<script type=\"text/javascript\">
-									alert(\"Bitte melden sie den Schüler/ die Schülerin erst an!\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Bitte melden sie den Schüler/die Schülerin erst an.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 				}
 				if (isset($_POST["m1"]))
@@ -706,23 +784,68 @@
 							</script>");
 					}
 					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
-					if ($anwesend == "1")
+					if ($anwesend["Anwesenheit"] == "1")
 					{
 						$runden = $mysqli->query("SELECT Runde FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
 						$runden = $runden["Runde"]-1;
 						$mysqli->query("UPDATE ".table." SET Runde='".$runden."' WHERE Nummer=".$_POST["personnummer"]);
-						echo "<script type=\"text/javascript\">
-									alert(\"Dem Schüler/ Der Schülerin wurde eine Runde abgezogen.\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						$managerLog = fopen("./Logs/Manager.log", "a");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." wurde eine Runde abgezogen\n");
+						fclose($managerLog);
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." wurde eine Runde abgezogen.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
-					//fals nicht anwesend
+					//falls nicht anwesend
 					else
 					{
-						echo "<script type=\"text/javascript\">
-									alert(\"Bitte melden sie den Schüler/ die Schülerin erst an!\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Bitte melden sie den Schüler/die Schülerin erst an</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 				}
 				//Anmelden
@@ -739,21 +862,66 @@
 							</script>");
 					}
 					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
-					if ($anwesend != "1")
+					if ($anwesend["Anwesenheit"] != "1")
 					{
 						$mysqli->query("UPDATE ".table." SET Anwesenheit='1' WHERE Nummer=".$_POST["personnummer"]);
-						echo "<script type=\"text/javascript\">
-									alert(\"Dem Schüler/ Der Schülerin wurde angemeldet.\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						$managerLog = fopen("./Logs/Manager.log", "a");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." angemeldet\n");
+						fclose($managerLog);
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Der Schüler/die Schülerin Nummer ".$_POST["personnummer"]." wurde angemeldet.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
-					//fals nicht anwesend
+					//falls schon anwesend
 					else
 					{
-						echo "<script type=\"text/javascript\">
-									alert(\"Der Schüler/ die Schülerin ist bereits angemeldet!\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Der Schüler/die Schülerin Nummer ".$_POST["personnummer"]." ist bereits anwesend.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 				}
 				//Klasse Anmelden
@@ -774,7 +942,8 @@
 					for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
 					for($i = 0; $i < count($sqlSelect); $i++)
 	        {
-	          if($anwesend != "1")
+						$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
+	          if($anwesend["Anwesenheit"] != "1")
 	          {
 	           		$mysqli->query("UPDATE ".table." SET Anwesenheit='1' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
 	          }
@@ -783,10 +952,34 @@
 							$Ausnahme=$Ausnahme.",".$sqlSelect[$i]["Nummer"];
 						}
 	        }
-						echo "<script type=\"text/javascript\">
-									alert(\"Die Klasse wurde erfolgreich angemeldet außer:\n \"".$Ausnahme.")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+					$managerLog = fopen("./Logs/Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." angemeldet, außer: ".$Ausnahme."\n");
+					fclose($managerLog);
+					echo "<head>
+									<title>".name."</title>
+									<link rel=\"stylesheet\" href=\"Interface.css\">
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Nachricht</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=content3>
+										<p id=Fehlermeldung>Die Klasse ".$_POST["personnummer"]." wurde erfolgreich angemeldet außer: ".$Ausnahme."</p>
+										<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+										</form>
+									</div>
+								</body>";
 				}
 				//Abmelden
 				if(isset($_POST["abmelden"])&&$_POST["Oder"]=="Nummer")
@@ -802,28 +995,94 @@
 							</script>");
 					}
 					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
-					if ($anwesend == "1")
+					if ($anwesend["Anwesenheit"] == "1")
 					{
 						$mysqli->query("UPDATE ".table." SET Anwesenheit='2' WHERE Nummer=".$_POST["personnummer"]);
-						echo "<script type=\"text/javascript\">
-									alert(\"Dem Schüler/ Der Schülerin wurde angemeldet.\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						$managerLog = fopen("./Logs/Manager.log", "a");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." abgemeldet\n");
+						fclose($managerLog);
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Der Schüler/die Schülerin Nummer ".$_POST["personnummer"]." wurde erfolgreich abgemeldet.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
-					elseif ($anwesend == "2")
+					elseif ($anwesend["Anwesenheit"] == "2")
 					{
-						echo "<script type=\"text/javascript\">
-									alert(\"Dem Schüler/ Der Schülerin ist bereits abgemeldet.\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Der Schüler/die Schülerin Nummer ".$_POST["personnummer"]." ist bereits abgemeldet.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 					//fals nicht anwesend
 					else
 					{
-						echo "<script type=\"text/javascript\">
-									alert(\"Bitte melden sie den Schüler/die Schülerin erst an\")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Nachricht</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=content3>
+											<p id=Fehlermeldung>Bitte melden sie den Schüler/die Schülerin Nummer  ".$_POST["personnummer"]." erst an.</p>
+											<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+											</form>
+										</div>
+									</body>";
 					}
 				}
 				//Klasse Abmelden
@@ -843,8 +1102,9 @@
 					$result = $mysqli->query("SELECT * FROM ".table);
 					for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
 					for($i = 0; $i < count($sqlSelect); $i++)
+					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
 					{
-						if($anwesend != "2")
+						if($anwesend["Anwesenheit"] != "2")
 						{
 								$mysqli->query("UPDATE ".table." SET Anwesenheit='2' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
 						}
@@ -853,48 +1113,70 @@
 							$Ausnahme=$Ausnahme.",".$sqlSelect[$i]["Nummer"];
 						}
 					}
-						echo "<script type=\"text/javascript\">
-									alert(\"Die Klasse wurde erfolgreich abgemeldet außer:\n \"".$Ausnahme.")
-									window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-								</script>";
-				}
-				else
-				{
-					echo "<script type=\"text/javascript\">
-								alert(\"Es ist ein Fehler aufgetreten!\")
-								window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-							</script>";
+					$managerLog = fopen("./Logs/Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Klasse ".$_POST["personnummer"]." abgemeldet, außer: ".$Ausnahme."\n");
+					fclose($managerLog);
+					echo "<head>
+									<title>".name."</title>
+									<link rel=\"stylesheet\" href=\"Interface.css\">
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Nachricht</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=content3>
+										<p id=Fehlermeldung>Die Klasse ".$_POST["personnummer"]." wurde erfolgreich abgemeldet, außer: ".$Ausnahme.".</p>
+										<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+										</form>
+									</div>
+								</body>";
 				}
 			}
 			//Fals Feld leer
 			else
 			{
-				echo "<script type=\"text/javascript\">
-							alert(\"Bitte füllen sie zuerst das Feld aus!\")
-							window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-						</script>";
+				echo "<head>
+								<title>".name."</title>
+								<link rel=\"stylesheet\" href=\"Interface.css\">
+							</head>
+							<body>
+								<div id=header>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+								</div>
+								<div id=hotbar>
+									<a id=TextHB>Nachricht</a>
+									<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+										<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+									</form>
+									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+										<input value=\"Über\" type=\"submit\" id=hbbutt>
+									</form>
+								</div>
+								<div id=content3>
+									<p id=Fehlermeldung>Bitte füllen sie zuerst das Feld aus.</p>
+									<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+										<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+									</form>
+								</div>
+							</body>";
 			}
 		}
 		//SuS Registrieren
 		elseif ($_GET["part"]=="anmelden"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&$_SESSION["UStufe"]=="1")
 		{
-			if (isset($_GET["process"])==false)
-			{
-
-				echo "<script>
-				  var txt;
-				  var nummer = prompt(\"Schülernummer:\", \"\");
-					var Name = prompt(\"Name:\", \"\");
-					var klasse = prompt(\"Klasse:\", \"\");
-				    if (nummer == null || nummer == \"\"||Name == null || Name == \"\"||klasse == null||klasse==\"\") {
-				      alert(\"Abgebrochen\");
-						   window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-				    } else {
-							window.location.href = \"".url."/manager.php?part=anmelden&process=on&Name=\"+Name+\"&Nummer=\"+nummer+\"&Klasse=\"+klasse;
-				    }
-				</script>";
-			}
-			elseif (isset($_GET["process"])==true)
+			if (isset($_GET["process"])==true)
 			{
 				$mysqli = new mysqli(host,user, password, database);
 				if($mysqli->connect_errno)
@@ -912,9 +1194,9 @@
 					$result = intval($result);
 					if($result=="")
 					{
-						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_GET["Name"]."', NULL, '".$_GET["Klasse"]."', '".$_GET["Nummer"]."', '', '', NULL, NULL)");
+						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_POST["Name"]."', NULL, '".$_POST["Klasse"]."', '".$_POST["Nummer"]."', '', '', NULL, NULL)");
 						$managerLog = fopen("./Logs/Manager.log", "a");
-						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_GET["Nummer"]." registriert\n");
+						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_POST["Nummer"]." registriert\n");
 						fclose($managerLog);
 						echo "<head>
 										<title>".name."</title>
@@ -931,17 +1213,22 @@
 										</form>
 										</div>
 										<div id=content2>
-											<p id=Fehlermeldung>Schüler/innen ".$_GET["Name"]." wurde erfolgreich registriert.</p>
-											<form action=\"manager.php?part=interface\" method=\"POST\" >
-												<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
-											</form>
+											<p id=Fehlermeldung>Schüler/innen ".$_POST["Name"]." wurde erfolgreich registriert.</p>
+											<div id=login2>
+												 <form action=\"manager.php?part=anmelden\" method=\"POST\" id=hbpos2 >
+													<input value=\"Neuen Schüler registrieren\" type=\"submit\" id=button>
+												 </form>
+												 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+														<input value=\"Zum Dashboard\" type=\"submit\" id=button>
+												</form>
+												</div>
 										</div>
 									</body>";
 					}
 					else
 						{
 							$managerLog = fopen("./Logs/Manager.log", "a");
-							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat versucht Nummer ".$_GET["Nummer"]." zu registriert, welches aber existierte\n");
+							fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat versucht den Schüler/die Schülerin Nummer ".$_POST["Nummer"]." zu registriert, welche/r aber schon existiert\n");
 							fclose($managerLog);
 							echo "<head>
 											<title>".name."</title>
@@ -953,18 +1240,74 @@
 												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
 											</div>
 											<div id=hotbar>
-												<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-												<input value=\"Über\" type=\"submit\" id=hbbutt>
-											</form>
-											</div>
-											<div id=content2>
-												<p id=Fehlermeldung>Nummer ".$_GET["Nummer"]." wurde nicht registriert.</p>
-												<form action=\"manager.php?part=interface\" method=\"POST\" >
-													<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+												<a id=TextHB>Schüler/in registrieren-Der Schüler/die Schülerin existiert bereit</a>
+												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+													<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+												</form>
+												<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+													<input value=\"Über\" type=\"submit\" id=hbbutt>
 												</form>
 											</div>
+											<div id=login2>
+												<form action=\"manager.php?part=anmelden&process=on\" method=\"POST\">
+													<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
+													<input name=\"Name\" type=\"text\" placeholder=\"Bitte geben sie den Name an:\" id=InputRegi>
+													<div id=login2>
+														<input name=\"Nummer\" type=\"text\" placeholder=\"Bitte gebe sie die Schüler/Schülerinnen Nummer an:\" id=InputRegi>
+													</div>
+													<div id=login2>
+														<input name=\"Klasse\" type=\"text\" placeholder=\"Bitte geben sie die Klasse an:\" id=InputRegi><br>
+													</div>
+											</div>
+											<div id=login2>
+													<input value=\"Registrieren\" type=\"submit\" id=button>
+												 </form>
+												 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+														<input value=\"Abbrechen\" type=\"submit\" id=button>
+												</form>
+												</div>
 										</body>";
 						}
+					}
+					else
+					{
+						echo "<head>
+										<title>".name."</title>
+										<link rel=\"stylesheet\" href=\"Interface.css\">
+									</head>
+									<body>
+										<div id=header>
+											<p id=Titel>".spruch."</p>
+											<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+										</div>
+										<div id=hotbar>
+											<a id=TextHB>Schüler/in registrieren</a>
+											<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+												<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+											</form>
+											<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2>
+												<input value=\"Über\" type=\"submit\" id=hbbutt>
+											</form>
+										</div>
+										<div id=login2>
+											<form action=\"manager.php?part=anmelden&process=on\" method=\"POST\">
+												<p id=login>Fülle alle Felder aus und drücke \"Registrieren\":</p>
+												<input name=\"Name\" type=\"text\" placeholder=\"Bitte geben sie den Name an:\" id=InputRegi>
+												<div id=login2>
+													<input name=\"Nummer\" type=\"text\" placeholder=\"Bitte gebe sie die Schüler/Schülerinnen Nummer an:\" id=InputRegi>
+												</div>
+												<div id=login2>
+													<input name=\"Klasse\" type=\"text\" placeholder=\"Bitte geben sie die Klasse an:\" id=InputRegi><br>
+												</div>
+										</div>
+										<div id=login2>
+												<input value=\"Registrieren\" type=\"submit\" id=button>
+											 </form>
+											 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+													<input value=\"Abbrechen\" type=\"submit\" id=button>
+											</form>
+											</div>
+									</body>";
 					}
 			}
 		//Exportieren
