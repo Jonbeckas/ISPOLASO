@@ -317,3 +317,13 @@ table, td, th, {
 #TitelTabl {
 	margin: 3% 0% 0%;
 }
+
+#Admin_iframe {
+  font-size:2vw;
+  font-family: "Impact";
+  color: var(--main-color);
+  margin-bottom:2%;
+  text-align: center;
+  float: center;
+  width: 50%;
+}

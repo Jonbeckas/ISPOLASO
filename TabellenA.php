@@ -1,5 +1,7 @@
 <?php
     include "settings.php";
+    session_start();
+    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melde die erst an");
     echo "<form action=\"TabellenA.php\" method=\"POST\">
             <select id=\"Auswahl\" name=\"Auswahl\">
               <option value=\"Runde\">Rundenanzahl</option>
@@ -38,6 +40,7 @@
         <td>Ankunftszeit</td>
         <td>Abmeldezeit</td>
         <td>Runde</td>
+        <td>Station</td>
 
       </tr>";
       $result = $mysqli->query("SELECT * FROM ".table);
@@ -78,6 +81,7 @@
                         <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
                         <td>".$sqlSelect[$i]["Vorname"]."</td>
                         <td>".$sqlSelect[$i]["Runde"]."</td>
+                        <td>".$sqlSelect[$i]["Station"]."</td>
                       </tr>";
             }
           }
@@ -93,12 +97,13 @@
                       <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
                       <td>".$sqlSelect[$i]["Vorname"]."</td>
                       <td>".$sqlSelect[$i]["Runde"]."</td>
+                      <td>".$sqlSelect[$i]["Station"]."</td>
                     </tr>";
           }
         }
       }
       echo "</table>";
       echo "<script>
-              window.setTimeout('location.href=\"".url."/TabellenA.php\"', 30000);
+              window.setTimeout('location.href=\"".url."/TabellenA.php\"', 60000);
             </script>";
  ?>

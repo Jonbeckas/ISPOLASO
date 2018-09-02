@@ -1,5 +1,7 @@
 <?php
   	include "settings.php";
+    session_start();
+    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melde die erst an");
       $mysqli = new mysqli(host,user, password, database);
       if($mysqli->connect_errno)
       {
@@ -29,7 +31,7 @@
         array_multisort($sort, SORT_DESC, $sqlSelect);
         for($i = 0; $i < count($sqlSelect); $i++)
         {
-          if($sqlSelect[$i]["Nummer"]!=""&&$sqlSelect[$i]["Anwesenheit"]=="1"&&strstr($sqlSelect[$i]["Name"],"MAN_")===false&&$sqlSelect[$i]["Uhrzeit"]!=""&&$sqlSelect[$i]["Uhrzeit"]!="0"&&$sqlSelect[$i]["Uhrzeit"] <= time()-2700)
+          if($sqlSelect[$i]["Nummer"]!=""&&$sqlSelect[$i]["Anwesenheit"]=="1"&&strstr($sqlSelect[$i]["Name"],"MAN_")===false&&$sqlSelect[$i]["Uhrzeit"]!=""&&$sqlSelect[$i]["Uhrzeit"]!="0"&&$sqlSelect[$i]["Uhrzeit"] <= time()-vermisttime)
           {
             echo
             "	<tr>
@@ -44,6 +46,6 @@
         }
         echo "</table>";
         echo "<script>
-                window.setTimeout('location.href=\"".url."/Tabellen.php\"', 3000);
+                window.setTimeout('location.href=\"".url."/Tabellen.php\"', 6000);
               </script>";
 ?>

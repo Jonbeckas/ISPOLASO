@@ -23,7 +23,7 @@
 	{
 		$error = error_get_last();
 		if ($error['type'] === E_ERROR)
-		{ 
+		{
 			die( "<head>
 							<title>".name."</title>
 							<link rel=\"stylesheet\" href=\"Interface.css\">
@@ -43,7 +43,7 @@
 								</form>
 							</div>
 							<div id=content3>
-								<p id=Fehlermeldung>es ist ein Fehler aufgetreten, die Aktion wurde nicht ausgeführt.</p>
+								<p id=Fehlermeldung>Es ist ein Fehler aufgetreten, die Aktion wurde nicht ausgeführt.</p>
 								<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
 									<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 								</form>
@@ -125,6 +125,7 @@
 					$Sicherheit = $mysqli->query("SELECT Klasse FROM ".table." WHERE Name='MAN_".$username."'");
 					$Sicherheit = $Sicherheit->fetch_assoc();
 					$Sicherheit = $Sicherheit["Klasse"];
+					if ($Sicherheit=="-1") $Anwesend=0;
 					if ($Anwesend==0)
 					{
 						$dbpasswd = $mysqli->query("SELECT Vorname FROM ".table." WHERE Name='MAN_".$username."'");
@@ -132,7 +133,10 @@
 						$dbpasswd = $dbpasswd["Vorname"];
 							if(password_verify($userpassword,$dbpasswd))
 							{
-								$mysqli->query("UPDATE ".table." SET Anwesenheit=1 WHERE Name='MAN_".$username."'");
+								if ($Sicherheit!="-1")
+								{
+									$mysqli->query("UPDATE ".table." SET Anwesenheit=1 WHERE Name='MAN_".$username."'");
+								}
 								$managerLog = fopen("./Logs/Manager.log", "a");
 								fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$username." hat sich erfolgreich angemeldet\n");
 								fclose($managerLog);
@@ -189,6 +193,7 @@
 															<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
 															<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
 															<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
+															<input name=\"mint\" value=\"Mindestanwesenheit?\" type=\"submit\" id=button>
 														</form>
 													</div>
 													<div id=content2>
@@ -220,6 +225,15 @@
 											</div>
 											<div id=hotbar>
 												<a id=TextHB>Dashboard</a>
+												<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+													<input value=\"Admin Registrieren\" type=\"submit\" id=\"hbbutt\">
+												</form>
+												<form action=\"manager.php?part=reset\" method=\"POST\" id=hbpos>
+													<input value=\"Admin Reseten\" type=\"submit\" id=\"hbbutt\">
+												</form>
+												<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+													<input value=\"Admin Registrieren\" type=\"submit\" id=".$_SESSION["Button"].">
+												</form>
 												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 													<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 												</form>
@@ -233,6 +247,7 @@
 													<input name=\"befehl\" type=\"Text\" placeholder=\"SELECT * FROM ".table."\" id=InputRegi>
 													<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
 												</form>
+												<iframe src=\"TabellenB.php\" height=\"300px\" id=\"Admin_iframe\"></iframe>
 											</div>
 										</body>";
 						}
@@ -240,7 +255,7 @@
 
 					else
 					{
-						echo "echo <head>
+						echo " <head>
 												<title>".name."</title>
 												<link rel=\"stylesheet\" href=\"Interface.css\">
 											</head>
@@ -269,7 +284,7 @@
 												</div>
 											</body>";
 						$managerLog = fopen("./Logs/Manager.log", "a");
-						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$_username."konnte nicht angemeldet werden\n");
+						fwrite($managerLog, strftime("![%d.%m.%Y_%H:%M]",time())."    ".$username."konnte nicht angemeldet werden\n");
 						fclose($managerLog);
 					}
 				}
@@ -294,7 +309,7 @@
 										</form>
 									</div>
 									<div id=content3>
-										<p id=Fehlermeldung>Bitte melden sie sich erst mit dem Accound von anderen PCs ab!</p>
+										<p id=Fehlermeldung>Bitte melden sie sich erst mit dem Account von anderen PCs ab!</p>
 										<form action=\"".url."/manager.php?part=login\" method=\"POST\" >
 											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 										</form>
@@ -354,6 +369,7 @@
 											<input name=\"abmelden\" value=\"Abmelden\" type=\"submit\" id=button2>
 											<input name=\"p1\" value=\"Runde +1\" type=\"submit\" id=button>
 											<input name=\"m1\" value=\"Runde -1\" type=\"submit\" id=button2>
+											<input name=\"mint\" value=\"Mindestanwesenheit?\" type=\"submit\" id=button>
 										</form>
 									</div>
 									<div id=content2>
@@ -385,6 +401,12 @@
 							</div>
 							<div id=hotbar>
 								<a id=TextHB>Dashboard</a>
+								<form action=\"manager.php?part=register\" method=\"POST\" id=hbpos>
+									<input value=\"Admin Registrieren\" type=\"submit\" id=\"hbbutt\">
+								</form>
+								<form action=\"manager.php?part=reset\" method=\"POST\" id=hbpos>
+									<input value=\"Admin Reseten\" type=\"submit\" id=\"hbbutt\">
+								</form>
 								<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
 									<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
 								</form>
@@ -398,6 +420,7 @@
 									<input name=\"befehl\" type=\"Text\" placeholder=\"SELECT * FROM ".table."\" id=InputRegi>
 									<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
 								</form>
+								<iframe src=\"TabellenB.php\" height=\"300px\" id=\"Admin_iframe\"></iframe>
 							</div>
 						</body>";
 		}
@@ -506,9 +529,30 @@
 							$managerLog = fopen("./Logs/Manager.log", "a");
 							fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat den Admin ".$_POST["name"]." registriert\n");
 							fclose($managerLog);
-							echo "<script type=\"text/javascript\">
-										window.setTimeout('location.href=\"".url."/manager.php?part=interface\"', 0);
-									</script>";
+							echo "<head>
+											<title>".name."</title>
+											<link rel=\"stylesheet\" href=\"Interface.css\">
+										</head>
+										<body>
+											<div id=header>
+												<p id=Titel>".spruch."</p>
+												<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+											</div>
+											<div id=hotbar>
+												<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+													<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+												</form>
+												<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+													<input value=\"Über\" type=\"submit\" id=hbbutt>
+												</form>
+											</div>
+											<div id=content2>
+												<p id=Fehlermeldung>Der neue Admin wurde erfolgreich registriert.</p>
+												<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+													<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+												</form>
+											</div>
+										</body>";
 						}
 						else
 						{
@@ -645,7 +689,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.0</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.2</a><br></p>
 								</div>
 							</body>";
 			}
@@ -682,7 +726,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.0</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.2</a><br></p>
 								</div>
 							</body>";
 			}
@@ -693,6 +737,45 @@
 			//Auf leere Testen
 			if ($_POST["personnummer"]!="")
 			{
+				$mysqli = new mysqli(host,user, password, database);
+				if($mysqli->connect_errno)
+				{
+					$managerLog = fopen("./Logs/Manager.log", "a");
+					fwrite($managerLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK! ABMELDUNG ABGEBROCHEN!!!\n");
+					fclose($managerLog);
+					exit("<script type=\"text/javascript\">
+							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
+						</script>");
+				}
+				$anwesend = $mysqli->query("SELECT Nummer FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
+				if($anwesend["Nummer"]=="")
+				{
+					exit("<head>
+									<title>".name."</title>
+									<link rel=\"stylesheet\" href=\"Interface.css\">
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Nachricht</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=content3>
+										<p id=Fehlermeldung>Die Schülernummer ".$_POST["personnummer"]." existiert nicht</p>
+										<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+										</form>
+									</div>
+								</body>");
+				}
 				//Plus eine Runde
 				if (isset($_POST["p1"]))
 				{
@@ -938,15 +1021,19 @@
 							</script>");
 					}
 					$Ausnahme ="";
-					$result = $mysqli->query("SELECT * FROM ".table);
+					$result = $mysqli->query("SELECT * FROM ".table." WHERE Klasse='".$_POST["personnummer"]."'");
 					for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
 					for($i = 0; $i < count($sqlSelect); $i++)
 	        {
-						$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
-	          if($anwesend["Anwesenheit"] != "1")
+						$anwesend = $sqlSelect[$i]["Anwesenheit"];
+	          if($anwesend != "1"&& $sqlSelect[$i]["Nummer"]!="0")
 	          {
 	           		$mysqli->query("UPDATE ".table." SET Anwesenheit='1' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
 	          }
+						elseif( $sqlSelect[$i]["Nummer"]=="0")
+						{
+
+						}
 						else
 						{
 							$Ausnahme=$Ausnahme.",".$sqlSelect[$i]["Nummer"];
@@ -1099,14 +1186,18 @@
 							</script>");
 					}
 					$Ausnahme ="";
-					$result = $mysqli->query("SELECT * FROM ".table);
+					$result = $mysqli->query("SELECT * FROM ".table." WHERE Klasse='".$_POST["personnummer"]."'");
 					for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
 					for($i = 0; $i < count($sqlSelect); $i++)
-					$anwesend = $mysqli->query("SELECT Anwesenheit FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
 					{
-						if($anwesend["Anwesenheit"] != "2")
+						$anwesend = $sqlSelect[$i]["Anwesenheit"];
+						if($anwesend != "2"&& $sqlSelect[$i]["Nummer"]!="0")
 						{
 								$mysqli->query("UPDATE ".table." SET Anwesenheit='2' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
+						}
+						elseif( $sqlSelect[$i]["Nummer"]=="0")
+						{
+
 						}
 						else
 						{
@@ -1136,6 +1227,54 @@
 									</div>
 									<div id=content3>
 										<p id=Fehlermeldung>Die Klasse ".$_POST["personnummer"]." wurde erfolgreich abgemeldet, außer: ".$Ausnahme.".</p>
+										<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
+											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+										</form>
+									</div>
+								</body>";
+				}
+				//Mindestanwesenheit checken
+				elseif (isset($_POST["mint"]))
+				{
+					$mysqli = new mysqli(host,user, password, database);
+					if($mysqli->connect_errno)
+					{
+						$clientLog = fopen("./Logs/Client.log", "a");
+						fwrite($clientLog, strftime("!!![%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+						fclose($clientLog);
+			    		exit("<script type=\"text/javascript\">
+									alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \")
+								</script>");
+					}
+					$mint=$mysqli->query("SELECT Ankunftszeit FROM ".table." WHERE Nummer='".$_POST["personnummer"]."'")->fetch_Assoc();
+					if((time()-$mint["Ankunftszeit"])>minttime)
+					{
+						$Mint="hat seine/ihre Pflichtzeit";
+					}
+					else
+					{
+						$Mint="hat seine/ihre Pflichtzeit nicht";
+					}
+					echo "<head>
+									<title>".name."</title>
+									<link rel=\"stylesheet\" href=\"Interface.css\">
+								</head>
+								<body>
+									<div id=header>
+										<p id=Titel>".spruch."</p>
+										<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+									</div>
+									<div id=hotbar>
+										<a id=TextHB>Nachricht</a>
+										<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+											<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+										</form>
+										<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+											<input value=\"Über\" type=\"submit\" id=hbbutt>
+										</form>
+									</div>
+									<div id=content3>
+										<p id=Fehlermeldung>Der/die Schüler/-in ".$Mint." gelaufen.</p>
 										<form action=\"".url."/manager.php?part=interface\" method=\"POST\" >
 											<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 										</form>
@@ -1178,6 +1317,32 @@
 		{
 			if (isset($_GET["process"])==true)
 			{
+				if($_POST["Nummer"]=="0"||$_POST["Nummer"]=="") die("<head>
+								<title>".name."</title>
+								<link rel=\"stylesheet\" href=\"Interface.css\">
+							</head>
+							<body>
+								<div id=header>
+									<p id=Titel>".spruch."</p>
+									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+								</div>
+								<div id=hotbar>
+									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+									<input value=\"Über\" type=\"submit\" id=hbbutt>
+								</form>
+								</div>
+								<div id=content2>
+									<p id=Fehlermeldung>Die Schüler/innen Nummer darf nicht Null oder leer sein</p>
+									<div id=login2>
+										 <form action=\"manager.php?part=anmelden\" method=\"POST\" id=hbpos2 >
+											<input value=\"Neuen Schüler registrieren\" type=\"submit\" id=button>
+										 </form>
+										 <form action=\"manager.php?part=interface\" method=\"POST\" id=Rechts>
+												<input value=\"Zum Dashboard\" type=\"submit\" id=button>
+										</form>
+										</div>
+								</div>
+							</body>");
 				$mysqli = new mysqli(host,user, password, database);
 				if($mysqli->connect_errno)
 				{
@@ -1188,13 +1353,13 @@
 							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 						</script>");
 				}
-					$result = $mysqli->query("SELECT Nummer FROM ".table." WHERE Nummer='".$_GET["Nummer"]."'");
+					$result = $mysqli->query("SELECT Nummer FROM ".table." WHERE Nummer='".$_POST["Nummer"]."'");
 					$result = $result->fetch_assoc();
 					$result = $result["Nummer"];
 					$result = intval($result);
 					if($result=="")
 					{
-						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_POST["Name"]."', NULL, '".$_POST["Klasse"]."', '".$_POST["Nummer"]."', '', '', NULL, NULL)");
+						$mysqli->query("INSERT INTO `".table."` (`Name`, `Vorname`, `Klasse`, `Nummer`, `Anwesenheit`, `Ankunftszeit`, `Uhrzeit`, `Runde`) VALUES ('".$_POST["Name"]."', 0, '".$_POST["Klasse"]."', '".$_POST["Nummer"]."', '', '', 0, 0)");
 						$managerLog = fopen("./Logs/Manager.log", "a");
 						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat Nummer ".$_POST["Nummer"]." registriert\n");
 						fclose($managerLog);
@@ -1347,7 +1512,7 @@
 				{
 					unlink("./Logs/Export.zip");
 				}
-				$zipname= "./Export.zip";
+				$zipname= "./Logs/Export.zip";
 				$zip = new ZipArchive();
 				if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
 				{
@@ -1368,31 +1533,87 @@
 				$managerLog = fopen("./Logs/Manager.log", "a");
 				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Logs&Tabellen exportiert\n");
 				fclose($managerLog);
-				echo "<script type=\"text/javascript\">
-							window.setTimeout('location.href=\"".url."/Export.zip\"', 0);
-						</script>";
-				echo "<head>
-								<title>".name."</title>
-								<link rel=\"stylesheet\" href=\"Interface.css\">
-							</head>
-							<body>
-								<div id=header>
-									<p id=Titel>".spruch."</p>
-									<p id=Adminname>Account: ".$_SESSION["username"]."</p>
-								</div>
-								<div id=hotbar>
-									<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
-									<input value=\"Über\" type=\"submit\" id=hbbutt>
-								</form>
-								</div>
-								<div id=content2>
-									<p id=Fehlermeldung>Download Abgeschlossen</p>
-									<form action=\"manager.php?part=interface\" method=\"POST\" >
-										<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
-									</form>
-								</div>
-							</body>";
+				header("Content-Type: application/zip");
+		    header("Content-Disposition: attachment; filename=\"Export_".name."_".strftime("%d.%m.%Y_%H:%M",time()).".zip\"");
+		    readfile("./logs/Export.zip");
 		}
+		//Admin reseten
+		elseif($_GET["part"]=="reset"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&isset($_SESSION["UStufe"])==true&&$_SESSION["UStufe"]=="-1")
+		{
+			if (isset($_GET["process"]))
+			{
+				$mysqli = new mysqli(host,user, password, database);
+				if($mysqli->connect_errno)
+				{
+					$managerLog = fopen("./Logs/Manager.log", "a");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    FEHLER BEIN ZUGRIFF AUF DIE DATENBANK!!!\n");
+					fclose($managerLog);
+					exit("<script type=\"text/javascript\">
+							alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
+						</script>");
+				}
+				$mysqli->query("UPDATE ".table." SET Anwesenheit=0 WHERE Name='MAN_".$_POST["name"]."'");
+				echo "
+				<head>
+					<title>".name."</title>
+					<link rel=\"stylesheet\" href=\"Interface.css\">
+				</head>
+				<body>
+				<div id=header>
+						<p id=Titel>".spruch."</p>
+						<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+					</div>
+					<div id=hotbar>
+						<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+							<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+						</form>
+						<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+							<input value=\"Über\" type=\"submit\" id=hbbutt>
+						</form>
+					</div>
+					<div id=content3>
+						<p id=Fehlermeldung>Erfolgreich die Anwesenheit des Admins ".$_POST["name"]." resetet</p>
+						<form action=\"manager.php?part=interface\" method=\"POST\" >
+							<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
+						</form>
+					</div>
+				</body>";
+			}
+			else
+			{
+				echo"
+				<head>
+					<title>".name."</title>
+					<link rel=\"stylesheet\" href=\"Interface.css\">
+				</head>
+				<body>
+					<div id=header>
+						<p id=Titel>".spruch." HOHE RECHTE</p>
+						<p id=Adminname>Account: ".$_SESSION["username"]."</p>
+					</div>
+					<div id=hotbar>
+						<a id=TextHB>Admins Reseten</a>
+						<form action=\"manager.php?part=interface\" method=\"POST\" id=hbpos>
+							<input value=\"Zum Dashboard\" type=\"submit\" id=hbbutt>
+						</form>
+						<form action=\"manager.php?part=logout\" method=\"POST\" id=hbpos2>
+							<input value=\"Ausloggen\" type=\"submit\" id=hbbutt>
+						</form>
+						<form action=\"manager.php?part=about\" method=\"POST\" id=hbpos2 >
+							<input value=\"Über\" type=\"submit\" id=hbbutt>
+						</form>
+					</div>
+					<div id=content3>
+						<p id=Fehlermeldung>Wie lautet der Name des Admins?</p>
+						<form action=\"manager.php?part=reset&process=on\" method=\"POST\" >
+							<input name=\"name\" type=\"Text\" placeholder=\"Adminname\" id=InputRegi>
+							<input name=\"\" value=\"Okay\" type=\"submit\" id=button>
+						</form>
+					</div>
+				</body>";
+			}
+		}
+		//MYSQL für Admin
 		elseif($_GET["part"]=="mysql"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&isset($_SESSION["UStufe"])==true&&$_SESSION["UStufe"]=="-1")
 		{
 			$mysqli = new mysqli(host,user, password, database);
@@ -1405,10 +1626,13 @@
 						alert(\"Es ist ein Fehler beim verbinden mit der Datenbank aufgetreten \");
 					</script>");
 			}
-			$sqlSelect = "";
-			$sqlSelect = $mysqli->query($_POST["befehl"]);
-			$sqlSelect = $sqlSelect->fetch_assoc();
-			$sqlSelect = print_r($sqlSelect,true);
+			$result = $mysqli->query($_POST["befehl"]);
+			if($result!==TRUE&&$result!==FALSE)
+			{
+				for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
+				$sort  = array_column($sqlSelect, "Nummer");
+      	array_multisort($sort, SORT_ASC, $sqlSelect);
+			}
 			echo "
 			<head>
 				<title>".name."</title>
@@ -1427,9 +1651,52 @@
 						<input value=\"Über\" type=\"submit\" id=hbbutt>
 					</form>
 				</div>
-				<div id=content3>
-					<p id=Fehlermeldung>Erfolgreich mit der Ausgabe: ".$sqlSelect."</p>
-					<form action=\"manager.php?part=interface\" method=\"POST\" >
+				<div id=content3>";
+
+				if ($result!==TRUE&&$result!==FALSE)
+				{
+					echo"
+					<p id=Fehlermeldung>Erfolgreich mit der Ausgabe: </p>
+					<table border=\"1\">
+						<tr id=TabUS>
+				        <td>Nr.</td>
+				        <td>Name</td>
+				        <td>Klasse</td>
+				        <td>Anwesenheit</td>
+				        <td>Uhrzeit der <br> letzten Runde</td>
+				        <td>Ankunftszeit</td>
+				        <td>Abmeldezeit</td>
+				        <td>Runde</td>
+				        <td>Station</td>
+				      </tr>";
+							for($i=0;$i<count($sqlSelect);$i++)
+							{
+								echo
+											"	<tr>
+													<td>".$sqlSelect[$i]["Nummer"]."</td>
+													<td>".$sqlSelect[$i]["Name"]."</td>
+													<td>".$sqlSelect[$i]["Klasse"]."</td>
+													<td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+													<td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
+													<td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+													<td>".$sqlSelect[$i]["Vorname"]."</td>
+													<td>".$sqlSelect[$i]["Runde"]."</td>
+													<td>".$sqlSelect[$i]["Station"]."</td>
+												</tr>";
+							}
+						echo"
+						</table>";
+				}
+				elseif ($result===TRUE)
+				{
+					echo "<p id=Fehlermeldung>Erfolgreich</p>";
+				}
+				else
+				{
+					echo "<p id=Fehlermeldung>Es ist ein Fehler aufgetreten</p>";
+				}
+				echo
+					"<form action=\"manager.php?part=interface\" method=\"POST\" >
 						<input value=\"Okay\" type=\"submit\" id=Fehlerbutton>
 					</form>
 				</div>

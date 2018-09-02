@@ -12,5 +12,7 @@
 	define("url","",true);
 	define("mintime",30,true);	//in sekunden
 	define("countdown",1000,true); // in sekunden*1000 ALSO in millisekunden
-	define("maxschueler",850,true);
+	define("maxschueler",1000,true);
+	define("minttime",0,true);
+	define("vermisttime",2700,true); //in sekunden
 ?>
