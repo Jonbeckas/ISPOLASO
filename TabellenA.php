@@ -9,6 +9,7 @@
               <option value=\"Klasse\">Klasse</option>
               <option value=\"Nummer\">Nummer</option>
               <option value=\"Name\">Name</option>
+              <option value=\"Station\">Station</option>
             </select>
             <select id=\"GroßKlein\" name=\"GroßKlein\">
               <option value=\"SORT_DESC \">Groß->Klein (Absteigend)</option>
@@ -67,19 +68,25 @@
       {
         if (strstr($sqlSelect[$i]["Name"],"MAN_")===false)
         {
-          if (isset($_POST["Suche"]))
+          if (isset($_POST["Suche"])&&$_POST["Suche"]!="")
           {
             if ($sqlSelect[$i][$_POST["Auswahl"]]==$_POST["Suche"])
             {
+              if($sqlSelect[$i]["Uhrzeit"]!="0") $Uhrzeit=strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"]);
+              else $Uhrzeit="";
+              if($sqlSelect[$i]["Ankunftszeit"]!="0") $Ankunft=strftime("%H:%M", $sqlSelect[$i]["Ankunftszeit"]);
+              else $Ankunft="";
+              if($sqlSelect[$i]["Vorname"]!="0") $Abmeldung=strftime("%H:%M", $sqlSelect[$i]["Vorname"]);
+              else $Abmeldung="";
               echo
                     "	<tr>
                         <td>".$sqlSelect[$i]["Nummer"]."</td>
                         <td>".$sqlSelect[$i]["Name"]."</td>
                         <td>".$sqlSelect[$i]["Klasse"]."</td>
                         <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
-                        <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
-                        <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
-                        <td>".$sqlSelect[$i]["Vorname"]."</td>
+                        <td>".$Uhrzeit."</td>
+                        <td>".$Ankunft."</td>
+                        <td>".$Abmeldung."</td>
                         <td>".$sqlSelect[$i]["Runde"]."</td>
                         <td>".$sqlSelect[$i]["Station"]."</td>
                       </tr>";
@@ -87,15 +94,21 @@
           }
           else
           {
+            if($sqlSelect[$i]["Uhrzeit"]!="0") $Uhrzeit=strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"]);
+            else $Uhrzeit="";
+            if($sqlSelect[$i]["Ankunftszeit"]!="0") $Ankunft=strftime("%H:%M", $sqlSelect[$i]["Ankunftszeit"]);
+            else $Ankunft="";
+            if($sqlSelect[$i]["Vorname"]!="0") $Abmeldung=strftime("%H:%M", $sqlSelect[$i]["Vorname"]);
+            else $Abmeldung="";
             echo
                   "	<tr>
                       <td>".$sqlSelect[$i]["Nummer"]."</td>
                       <td>".$sqlSelect[$i]["Name"]."</td>
                       <td>".$sqlSelect[$i]["Klasse"]."</td>
                       <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
-                      <td>".strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"])."</td>
-                      <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
-                      <td>".$sqlSelect[$i]["Vorname"]."</td>
+                      <td>".$Uhrzeit."</td>
+                      <td>".$Ankunft."</td>
+                      <td>".$Abmeldung."</td>
                       <td>".$sqlSelect[$i]["Runde"]."</td>
                       <td>".$sqlSelect[$i]["Station"]."</td>
                     </tr>";

@@ -689,7 +689,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.4</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.5</a><br></p>
 									<a id=Zentrieren rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 								</div>
 							</body>";
@@ -727,7 +727,7 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.4</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.5</a><br></p>
 									<a rel=\"license\"  href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 								</div>
 							</body>";
@@ -797,6 +797,7 @@
 						$runden = $mysqli->query("SELECT Runde FROM ".table." WHERE Nummer=".$_POST["personnummer"])->fetch_assoc();
 						$runden = $runden["Runde"]+1;
 						$mysqli->query("UPDATE ".table." SET Runde='".$runden."' WHERE Nummer=".$_POST["personnummer"]);
+						$mysqli->query("UPDATE ".table." SET Uhrzeit='".time()."' WHERE Nummer=".$_POST["personnummer"]);
 						$managerLog = fopen("./Logs/Manager.log", "a");
 						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." wurde eine Runde hinzugefügt\n");
 						fclose($managerLog);
