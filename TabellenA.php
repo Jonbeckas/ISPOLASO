@@ -1,7 +1,7 @@
 <?php
     include "settings.php";
     session_start();
-    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melde die erst an");
+    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melden sie sich erst an");
     echo "<form action=\"TabellenA.php\" method=\"POST\">
             <select id=\"Auswahl\" name=\"Auswahl\">
               <option value=\"Runde\">Rundenanzahl</option>

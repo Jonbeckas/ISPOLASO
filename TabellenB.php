@@ -1,7 +1,7 @@
 <?php
     include "settings.php";
     session_start();
-    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melde die erst an");
+    if (isset($_SESSION["username"])==false||$_SESSION["username"]=="") die("Zugriff Verweigert. Bitte melden sie sich erst an");
     $mysqli = new mysqli(host,user, password, database);
     if($mysqli->connect_errno)
     {

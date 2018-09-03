@@ -689,7 +689,8 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.2</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.4</a><br></p>
+									<a id=Zentrieren rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 								</div>
 							</body>";
 			}
@@ -726,7 +727,8 @@
 									<p id=Zentrieren><a id=Fehlermeldung>Programmiert von:</a> <a id=Grau>Jonas Becker</a><br>
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
-									<a id=Fehlermeldung>ISPOLASO Version 1.2</a><br></p>
+									<a id=Fehlermeldung>ISPOLASO Version 1.4</a><br></p>
+									<a rel=\"license\"  href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 								</div>
 							</body>";
 			}
@@ -948,6 +950,7 @@
 					if ($anwesend["Anwesenheit"] != "1")
 					{
 						$mysqli->query("UPDATE ".table." SET Anwesenheit='1' WHERE Nummer=".$_POST["personnummer"]);
+						$mysqli->query("UPDATE ".table." SET Ankunftszeit='".time()."' WHERE Nummer=".$_POST["personnummer"]);
 						$managerLog = fopen("./Logs/Manager.log", "a");
 						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." angemeldet\n");
 						fclose($managerLog);
@@ -1029,6 +1032,7 @@
 	          if($anwesend != "1"&& $sqlSelect[$i]["Nummer"]!="0")
 	          {
 	           		$mysqli->query("UPDATE ".table." SET Anwesenheit='1' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
+								$mysqli->query("UPDATE ".table." SET Ankunftszeit='".time()."' WHERE Nummer=".$_POST["personnummer"]);
 	          }
 						elseif( $sqlSelect[$i]["Nummer"]=="0")
 						{
@@ -1040,7 +1044,7 @@
 						}
 	        }
 					$managerLog = fopen("./Logs/Manager.log", "a");
-					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." angemeldet, außer: ".$Ausnahme."\n");
+					fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Klasse ".$_POST["personnummer"]." angemeldet, außer: ".$Ausnahme."\n");
 					fclose($managerLog);
 					echo "<head>
 									<title>".name."</title>
@@ -1085,6 +1089,7 @@
 					if ($anwesend["Anwesenheit"] == "1")
 					{
 						$mysqli->query("UPDATE ".table." SET Anwesenheit='2' WHERE Nummer=".$_POST["personnummer"]);
+						$mysqli->query("UPDATE ".table." SET Vorname='".time()."' WHERE Nummer=".$_POST["personnummer"]);
 						$managerLog = fopen("./Logs/Manager.log", "a");
 						fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat dem Schüler/der Schülerin Nummer ".$_POST["personnummer"]." abgemeldet\n");
 						fclose($managerLog);
@@ -1194,6 +1199,7 @@
 						if($anwesend != "2"&& $sqlSelect[$i]["Nummer"]!="0")
 						{
 								$mysqli->query("UPDATE ".table." SET Anwesenheit='2' WHERE Klasse=".$_POST["personnummer"]." AND Nummer='".$sqlSelect[$i]["Nummer"]."'");
+								$mysqli->query("UPDATE ".table." SET Vorname='".time()."' WHERE Nummer=".$_POST["personnummer"]);
 						}
 						elseif( $sqlSelect[$i]["Nummer"]=="0")
 						{
@@ -1490,52 +1496,55 @@
 			}
 			$csv = fopen("./Logs/Export.csv","w+");
 			fwrite($csv,"Nummer,Name,Klasse,Anwesenheit,Uhrzeit,Ankunftszeit,Abmeldezeit,Runde\n");
-				for($i = 1; $i <= maxschueler; $i++)
+			$result=$mysqli->query("SELECT * FROM ".table);
+			for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
+      $sort  = array_column($sqlSelect, 'Nummer');
+      array_multisort($sort, SORT_ASC, $sqlSelect);
+			for($i = 1; $i <= count($sqlSelect); $i++)
+			{
+				if($sqlSelect[$i]["Nummer"]!=""&&$sqlSelect[$i]["Nummer"]!="0")
 				{
-					$sqlSelect = $mysqli->query("SELECT * FROM `".table."` WHERE Nummer='".$i."'");
-					$sqlSelect=$sqlSelect->fetch_assoc();
-					if($sqlSelect["Nummer"]!="")
-					{
-						fwrite($csv,
-						$sqlSelect["Nummer"].","
-						.$sqlSelect["Name"].","
-						.$sqlSelect["Klasse"].","
-						.$sqlSelect["Anwesenheit"].","
-						.strftime("%H:%M", $sqlSelect["Uhrzeit"]).","
-						.$sqlSelect["Ankunftszeit"].","
-						.$sqlSelect["Vorname"].","
-						.$sqlSelect["Runde"]."\n");
-					}
+					fwrite($csv,
+					$sqlSelect[$i]["Nummer"].","
+					.$sqlSelect[$i]["Name"].","
+					.$sqlSelect[$i]["Klasse"].","
+					.$sqlSelect[$i]["Anwesenheit"].","
+					.strftime("%H:%M", $sqlSelect[$i]["Uhrzeit"]).","
+					.$sqlSelect[$i]["Ankunftszeit"].","
+					.$sqlSelect[$i]["Vorname"].","
+					.$sqlSelect[$i]["Runde"].","
+					.$sqlSelect[$i]["Station"]."\n");
 				}
-				fclose($csv);
-				if (file_exists("./Logs/Export.zip"))
-				{
-					unlink("./Logs/Export.zip");
-				}
-				$zipname= "./Logs/Export.zip";
-				$zip = new ZipArchive();
-				if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
-				{
-					$managerLog = fopen("./Logs/Manager.log", "a");
-					fwrite($managerLog, strftime("!![%d.%m.%Y_%H:%M]",time())."    Es gabe einen Fehler beim erstellen der Export.zip\n");
-					fclose($managerLog);
-				    exit("Es ist ein Fehler beim öffnen der ZIP Datei aufgetreten.\n");
-				}
-				$InfoTXT = fopen("./Logs/Info.txt", "w+");
-				fwrite($InfoTXT, "Erstellt am: ");
-				fwrite($InfoTXT, strftime("%d.%m.%Y_%H:%M",time())."\nExport.csv enthält die Datenbank und ist UTF8 kodiert\nManager.log & Client.log enthalten die Logs vom manager Interface und vom der Eingabe GUI\nFalls Logs falsch dargestellt werden einfach in .txt umbenennen");
-				fclose($InfoTXT);
-					$zip->addFile("./Logs/Export.csv");
-					$zip->addFile("./Logs/Client.log");
-					$zip->addFile("./Logs/Manager.log");
-					$zip->addFile("./Logs/Info.txt");
-					$zip->close();
+			}
+			fclose($csv);
+			if (file_exists("./Logs/Export.zip"))
+			{
+				unlink("./Logs/Export.zip");
+			}
+			$zipname= "./Logs/Export.zip";
+			$zip = new ZipArchive();
+			if ($zip->open($zipname, ZipArchive::CREATE)!==TRUE)
+			{
 				$managerLog = fopen("./Logs/Manager.log", "a");
-				fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Logs&Tabellen exportiert\n");
+				fwrite($managerLog, strftime("!![%d.%m.%Y_%H:%M]",time())."    Es gabe einen Fehler beim erstellen der Export.zip\n");
 				fclose($managerLog);
-				header("Content-Type: application/zip");
-		    header("Content-Disposition: attachment; filename=\"Export_".name."_".strftime("%d.%m.%Y_%H:%M",time()).".zip\"");
-		    readfile("./logs/Export.zip");
+			    exit("Es ist ein Fehler beim öffnen der ZIP Datei aufgetreten.\n");
+			}
+			$InfoTXT = fopen("./Logs/Info.txt", "w+");
+			fwrite($InfoTXT, "Erstellt am: ");
+			fwrite($InfoTXT, strftime("%d.%m.%Y_%H:%M",time())."\nExport.csv enthält die Datenbank und ist UTF8 kodiert\nManager.log & Client.log enthalten die Logs vom manager Interface und vom der Eingabe GUI\nFalls Logs falsch dargestellt werden einfach in .txt umbenennen");
+			fclose($InfoTXT);
+				$zip->addFile("./Logs/Export.csv","Export.csv");
+				$zip->addFile("./Logs/Client.log","Client.log");
+				$zip->addFile("./Logs/Manager.log","Manager.log");
+				$zip->addFile("./Logs/Info.txt","Info.txt");
+				$zip->close();
+			$managerLog = fopen("./Logs/Manager.log", "a");
+			fwrite($managerLog, strftime("[%d.%m.%Y_%H:%M]",time())."    ".$_SESSION["username"]." hat die Logs&Tabellen exportiert\n");
+			fclose($managerLog);
+			header("Content-Type: application/zip");
+	    header("Content-Disposition: attachment; filename=\"Export_".name."_".strftime("%d.%m.%Y_%H:%M",time()).".zip\"");
+	    readfile("./Logs/Export.zip");
 		}
 		//Admin reseten
 		elseif($_GET["part"]=="reset"&&isset($_GET["part"])&&isset($_SESSION["username"])==true&&session_status()==2&&isset($_SESSION["UStufe"])==true&&$_SESSION["UStufe"]=="-1")
