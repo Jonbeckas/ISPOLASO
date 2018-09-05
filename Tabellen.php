@@ -23,7 +23,7 @@
           <td>Anwesenheit</td>
           <td>Uhrzeit ".strftime("%H:%M", time())."</td>
           <td>Ankunftszeit</td>
-
+          <td>Station</td>
         </tr>";
         $result = $mysqli->query("SELECT * FROM ".table);
         for ($sqlSelect = array (); $row = $result->fetch_assoc(); $sqlSelect[] = $row);
@@ -41,6 +41,7 @@
                 <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
                 <td>".round((time()-$sqlSelect[$i]["Uhrzeit"])/(60),0)." Min.</td>
                 <td>".$sqlSelect[$i]["Ankunftszeit"]."</td>
+                <td>".$sqlSelect[$i]["Station"]."</td>
               </tr>";
           }
         }

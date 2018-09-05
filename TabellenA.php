@@ -12,7 +12,7 @@
               <option value=\"Station\">Station</option>
             </select>
             <select id=\"GroßKlein\" name=\"GroßKlein\">
-              <option value=\"SORT_DESC \">Groß->Klein (Absteigend)</option>
+              <option value=\"SORT_DESC\">Groß->Klein (Absteigend)</option>
               <option value=\"SORT_ASC\">Klein->Groß (Aufsteigend)</option>
             </select>
             <input name=\"Suche\" type=\"text\" id=eingabeDB>
