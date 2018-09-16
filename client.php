@@ -70,6 +70,10 @@
 					window.setTimeout('location.href=\"".url."/client.php\"', 10);
 				</script>");
 		}
+		$station = $mysqli->query("SELECT Station FROM ".table." WHERE Nummer='".$student."'");
+		$station = $station->fetch_assoc();
+		$station = $station["Station"];
+		$station = intval($station);
 		$result = $mysqli->query("SELECT Uhrzeit FROM ".table." WHERE Nummer='".$student."'");
 		$result = $result->fetch_assoc();
 		$result = $result["Uhrzeit"];
@@ -97,38 +101,92 @@
 		}
 		if ($timestamp>=$result+mintime)
 		{
-			$rounds=$rounds+1;
-			$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
-			$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
-			if(isset($_GET["station"])&&$_GET["station"]!="")
+			$Zeit = time()-$result;
+			if ($station==0)
 			{
-				$mysqli->query("UPDATE ".table." SET Station='".$_GET["station"]."' WHERE Nummer='".$student."'");
+				$rounds=$rounds+1;
+				$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
+				$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
+				if(isset($_GET["station"])&&$_GET["station"]!="")
+				{
+					$mysqli->query("UPDATE ".table." SET Station='".$_GET["station"]."' WHERE Nummer='".$student."'");
+				}
+				$clientLog = fopen("./Logs/Client.log", "a");
+				fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat Runde ".$rounds." gelaufen\n");
+				fclose($clientLog);
+				header("Custom-Title: Scan gesendet");
+				header("Custom-Message: Dies war Runde: ".$rounds." bei Schüler ".$student.". Diese Runde dauerte ".$Zeit." Sekunden.");
+				echo "	<head>
+					    		<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
+									<title>".name."</title>
+								</head>
+								<body>
+									<h1>
+											".name."
+									</h1>
+									<p>Dies war Runde: ".$rounds."</p>
+									<script type=\"text/javascript\">
+										window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
+									</script>
+								</body>";
 			}
-			$clientLog = fopen("./Logs/Client.log", "a");
-			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat Runde ".$rounds." gelaufen\n");
-			fclose($clientLog);
-			header("Custom-Title: Scan gesendet");
-			header("Custom-Message: Dies war Runde: ".$rounds." bei Schüler ".$student."");
-			echo "	<head>
-				    		<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
-								<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
-								<title>".name."</title>
-							</head>
-							<body>
-								<h1>
-										".name."
-								</h1>
-								<p>Dies war Runde: ".$rounds."</p>
-								<script type=\"text/javascript\">
-									window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
-								</script>
-							</body>";
+			elseif ($station!=0&&$station!=$_GET["station"])
+			{
+				$rounds=$rounds+1;
+				$mysqli->query("UPDATE ".table." SET Uhrzeit='".$timestamp."' WHERE Nummer='".$student."'");
+				$mysqli->query("UPDATE ".table." SET Runde='".$rounds."' WHERE Nummer='".$student."'");
+				if(isset($_GET["station"])&&$_GET["station"]!="")
+				{
+					$mysqli->query("UPDATE ".table." SET Station='".$_GET["station"]."' WHERE Nummer='".$student."'");
+				}
+				$clientLog = fopen("./Logs/Client.log", "a");
+				fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat Runde ".$rounds." gelaufen\n");
+				fclose($clientLog);
+				header("Custom-Title: Scan gesendet");
+				header("Custom-Message: Dies war Runde: ".$rounds." bei Schüler ".$student.". Diese Runde dauerte ".$Zeit." Sekunden.");
+				echo "	<head>
+									<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
+									<title>".name."</title>
+								</head>
+								<body>
+									<h1>
+											".name."
+									</h1>
+									<p>Dies war Runde: ".$rounds."</p>
+									<script type=\"text/javascript\">
+										window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
+									</script>
+								</body>";
+			}
+			else
+			{
+				fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." hat zweimal bei Station ".$POST["station"]." abgescannt\n");
+				fclose($clientLog);
+				header("Custom-Title: Fehler 410");
+				header("Custom-Message: Nummer ".$student." hat zweimal bei Station ".$POST["station"]." abgescannt.");
+				echo "	<head>
+									<link type=\"text/css\" rel=\"stylesheet\" href=\"style.css\">
+									<link href=\"images/icon.png\" type=\"image/png\" rel=\"icon\">
+									<title>".name."</title>
+								</head>
+								<body>
+									<h1>
+											".name."
+									</h1>
+									<p>Du hast zweimal an der selben Station abgescannt</p>
+									<script type=\"text/javascript\">
+										window.setTimeout('location.href=\"".url."/client.php\"', ".countdown.");
+									</script>
+								</body>";
+			}
 		}
 		else{
 			date_default_timezone_set("Europe/Berlin");
 			$zuschnell=time()-$result;
 			header("Custom-Title: FEHLER 508");
-			header("Custom-Message: Der Schueler ".$student." ist ".$zuschnell." Sek. zu schnell gelaufen! Manuelle Eingabe?");
+			header("Custom-Message: Der Schueler ".$student." war ".$zuschnell." Sek. zu schnell! Manuelle Eingabe?");
 			$clientLog = fopen("./Logs/Client.log", "a");
 			fwrite($clientLog, strftime("[%d.%m.%Y_%H:%M]",time())."    Nummer ".$student." war ".$zuschnell." Sek. zu schnell\n");
 			fclose($clientLog);

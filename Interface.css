@@ -296,8 +296,9 @@ iframe {
 		width:45%;
 }
 #EingabeDB {
-		float:left;
-		margin-right:0.25%
+    float:left;
+    margin-right:0.25%;
+    width:10%;
 }
 table {
     border-collapse: collapse;

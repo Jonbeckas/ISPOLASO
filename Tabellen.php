@@ -20,7 +20,7 @@
           <td>Nr.</td>
           <td>Name</td>
           <td>Klasse</td>
-          <td>Anwesenheit</td>
+          <td>Aw</td>
           <td>Uhrzeit ".strftime("%H:%M", time())."</td>
           <td>Ankunftszeit</td>
           <td>Station</td>

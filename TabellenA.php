@@ -83,7 +83,7 @@
                         <td>".$sqlSelect[$i]["Nummer"]."</td>
                         <td>".$sqlSelect[$i]["Name"]."</td>
                         <td>".$sqlSelect[$i]["Klasse"]."</td>
-                        <td>".$sqlSelect[$i]["Anwesenheit"]."</td>
+                        <td>".$sqlSelect[$i]["aw"]."</td>
                         <td>".$Uhrzeit."</td>
                         <td>".$Ankunft."</td>
                         <td>".$Abmeldung."</td>
