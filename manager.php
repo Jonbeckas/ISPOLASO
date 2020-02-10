@@ -791,7 +791,11 @@
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>ISPOLASO Version 1.8</a><br></p>
-									<a id=Zentrieren rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+									<a id=Zentrieren rel=\"license\"><p>Copyright 2019 Marten Schiwek und Jonas Becker<br>
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at<br>
+
+http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
 								</div>
 							</body>";
 			}
@@ -820,7 +824,7 @@
 									<form action=\"https://github.com/Jonbeckas/ISPOLASO\" id=hbpos>
 											<input value=\"GitHub Seite\" type=\"submit\" id=hbbutt>
 									</form>
-									<form action=\"https://github.com/Jonbeckas/ISPOLASO/wikit\" id=hbpos>
+									<form action=\"https://github.com/Jonbeckas/ISPOLASO/wiki\" id=hbpos>
 										<input value=\"ISPOLASO Wiki\" type=\"submit\" id=hbbutt>
 									</form>
 								</div>
@@ -829,7 +833,11 @@
 									<a id=Fehlermeldung>Design:</a> <a id=Grau>Florian Weichert & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>Konzept & Idee:</a> <a id=Grau>Jonas Becker & Marten Schiwek</a><br>
 									<a id=Fehlermeldung>ISPOLASO Version 1.8</a><br></p>
-									<a rel=\"license\"  href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\"><img alt=\"Creative Commons License\" style=\"border-width:0\" src=\"https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png\" /></a><br />This work is licensed under a <a rel=\"license\" href=\"http://creativecommons.org/licenses/by-nc-sa/4.0/\">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+								<p>	Copyright 2019 Marten Schiwek und Jonas Becker
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
 								</div>
 							</body>";
 			}
