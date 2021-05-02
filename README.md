@@ -1,5 +1,20 @@
 # ISPOLASO
 
+## Deprecation Warning
+Use [Checkline](https://github.com/Jonbeckas/Checkline) as a replacement
+
+ISPOLASO is Deprecated, because it has the following problems:
+
+- Everyone who nows the scanner/round counter URL can add rounds to any runners
+- Maybe it is possible to run MYSQL injections
+- Bad code
+- Bad code management
+- Hard to maintain
+- Hard to configure
+
+
+
+## Licence
 
 Copyright 2019 Marten Schiwek und Jonas Becker
 
